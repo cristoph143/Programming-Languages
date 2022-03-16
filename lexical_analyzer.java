@@ -27,13 +27,23 @@ public class lexical_analyzer {
         try (
                 Scanner scan = new Scanner(System.in);) {
             String lexemes = new String();
-            //print the lexemes
-            while (scan.hasNext()) {
-                lexemes = scan.nextLine();
-                System.out.println(lexemes);
+            //input the source code
+            System.out.println("Enter the source code: ");
+            lexemes = scan.nextLine();
+            //if isTerminator(lexemes) is false then exit the program.
+            if(!isTerminator(lexemes)){
+                System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement"); 
+                System.exit(0);
             }
         } catch (Exception e) {
             System.out.println("Error");
         }
+    }
+    //return true if the last character of the string is a ";"
+    public static boolean isTerminator(String s) {
+        if (s.charAt(s.length() - 1) == ';') {
+            return true;
+        }
+        return false;
     }
 }
