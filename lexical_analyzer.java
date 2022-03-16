@@ -27,23 +27,63 @@ public class lexical_analyzer {
         try (
                 Scanner scan = new Scanner(System.in);) {
             String lexemes = new String();
-            //input the source code
+            // input the source code
             System.out.println("Enter the source code: ");
             lexemes = scan.nextLine();
-            //if isTerminator(lexemes) is false then exit the program.
-            if(!isTerminator(lexemes)){
-                System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement"); 
+            // if isTerminator(lexemes) is false then exit the program.
+            if (!isTerminator(lexemes)) {
+                System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement");
                 System.exit(0);
+            }
+            // call tokenize(lexemes) to tokenize the source code and save it as a variable
+            String[] tokens = tokenize(lexemes);
+            // print the tokens
+            System.out.println("Token\tType");
+            for (int i = 0; i < tokens.length; i++) {
+                System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]));
             }
         } catch (Exception e) {
             System.out.println("Error");
         }
     }
-    //return true if the last character of the string is a ";"
+
+    // return true if the last character of the string is a ";"
     public static boolean isTerminator(String s) {
         if (s.charAt(s.length() - 1) == ';') {
             return true;
         }
         return false;
     }
+
+    // return the tokenized form of the lexemes by tokenizing the space and ";"
+    public static String[] tokenize(String lexemes) {
+        String[] tokens = lexemes.split(" ");
+        //check if the last tokens is equal to ";" then return the tokens
+        if (tokens[tokens.length - 1].equals(";")) {
+            return tokens;
+        }
+        return tokens;
+    }
+
+    // getTokenType
+    public static String getTokenType(String token) {
+        if (token.equals("int") || token.equals("float") || token.equals("double")
+                || token.equals("char") || token.equals("boolean") || token.equals("byte")
+                || token.equals("short") || token.equals("long")) {
+            return "Data Type";
+        } else if (token.equals("=")) {
+            return "Equals_op";
+        } else if (token.equals(";")) {
+            return "Terminator";
+        } else if (token.equals("+") || token.equals("-") || token.equals("*")
+                || token.equals("/") || token.equals("%") || token.equals("++")
+                || token.equals("--") || token.equals("==") || token.equals("!=")
+                || token.equals("<") || token.equals(">") || token.equals("<=")
+                || token.equals(">=") || token.equals("&&") || token.equals("||")
+                || token.equals("!")) {
+            return "Operator";
+        }
+        return "identifier";
+    }
+
 }
