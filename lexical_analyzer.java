@@ -1,3 +1,4 @@
+import java.security.Key;
 import java.util.Scanner;
 
 /*
@@ -60,6 +61,7 @@ public class lexical_analyzer {
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
         String[] tokens = lexemes.split(" ");
+        String[] newTokens = new String[tokens.length + 2];
         //iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
             //if the returned value from getTokenType(tokens[i]) is not null then add
@@ -90,14 +92,32 @@ public class lexical_analyzer {
                         index++;
                     }
                 }
+                //copy the tokens to new array and then add the last index of the tempHolders2 array
+                //to the new array.
+                for (int k = 0; k < tokens.length; k++) {
+                    newTokens[k] = tokens[k];
+                    System.out.println("new "+ newTokens[k]);
+                    //print the last token
+                    if (k == tokens.length - 1) {
+                        newTokens[tokens.length -1] = tempHolders2[0];
+                        System.out.println("last token: " + newTokens[k]);
+                    }
+                    System.out.println("news "+ newTokens[k]);
+                }
+                //if the count of tempHolder2 is equal to 1 then add the index value of tempHolders2 to the
+                //last array of tokens
+                // if (tempHolders2.length == 1) {
+                    // tokens[i] += tempHolders2[0];
+                // }
                 //iterate and print the tempHolders
                 for (int j = 0; j < id.length(); j++) {
                     System.out.println("tmp2 "+ tempHolders2[j]);
                 }
-                id = extended_tokenizer(tokens,tempHolders2);//iterate and print the tempHolders
-                for (int j = 0; j < id.length(); j++) {
-                    System.out.println("tmp2 "+ tempHolders2[j]);
-                }
+                // id = extended_tokenizer(tokens,tempHolders2);//iterate and print the tempHolders
+                // for (int j = 0; j < id.length(); j++) {
+                //     System.out.println("tmp2 "+ tempHolders2[j]);
+                // }
+                
                 // System.out.println("uid "+id);
                 // //iterate and print the tempHolders
                 // for (int j = 0; j < tempHolders.length; j++) {
@@ -105,7 +125,11 @@ public class lexical_analyzer {
                 // }
             }
         }
-        return tokens;
+        //iterate and print tokens
+        for (int i = 0; i < tokens.length; i++) {
+            System.out.println("stokens "+ tokens[i]);
+        }
+        return newTokens;
     }
 
     private static String extended_tokenizer(String[] tokens, String[] tempHolders) {
