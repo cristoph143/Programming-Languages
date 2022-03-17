@@ -59,25 +59,27 @@ public class lexical_analyzer {
 
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
-        String[] tokens;
-        //check if lexemes has a space or ";"
-        if (lexemes.contains(" ") || lexemes.contains(";")) {
-            // if lexemes has a space or ";" then split the string by space and ";"
-            tokens = lexemes.split(" ");
-            for (int i = 0; i < tokens.length; i++) {
-                if (tokens[i].contains(";")) {
-                    //remove the ";"
-                    tokens[i] = tokens[i].substring(0, tokens[i].length() - 1);
-                    System.out.println(tokens[i]);
-                    //add the ";" to last token
-                    // tokens[tokens.length] = ";";
+        String[] tokens = lexemes.split(" ");
+        //iterate the tokens
+        for (int i = 0; i < tokens.length; i++) {
+            //if the returned value from getTokenType(tokens[i]) is not null then add
+            //index value to new array.
+            if (getTokenType(tokens[i]) != null) {
+                tokens[i] = tokens[i];
+            }
+            //if the returned value from getTokenType(tokens[i]) is null then
+            //split the tokens[i] by "" and add the it to temp holders array
+            else {
+                String[] tempHolders = tokens[i].split("");
+                //iterate the tempHolders array
+                for (int j = 0; j < tempHolders.length; j++) {
+                    //if the returned value from getTokenType(tempHolders[j]) is not null then add
+                    //index value to new array.
+                    if (getTokenType(tempHolders[j]) != null) {
+                        tokens[i] = tempHolders[j];
+                    }
                 }
             }
-        } 
-        else {
-            // if lexemes does not have a space or ";" then return the lexemes as a string array
-            tokens = new String[1];
-            tokens[0] = lexemes;
         }
         return tokens;
     }
@@ -101,7 +103,17 @@ public class lexical_analyzer {
                 || token.equals("!")) {
             return "Operator";
         }
-        return "identifier";
+        //else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return "identifier"
+        else if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+            return "Identifier";
+        }
+        //else if the token is equal to "[0-9]+" then return "Constant"
+        else if (token.matches("[0-9]+")) {
+            return "Constant";
+        }
+        else{
+            return null;
+        }
     }
 
 }
