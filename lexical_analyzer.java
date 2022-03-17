@@ -79,29 +79,54 @@ public class lexical_analyzer {
                 //iterate the tempholders[i] and if the returned value from getTokenType(tempHolders[i]) 
                 //is not null, remove it from the list of tempHolders and add to the id string.
                 String id = "";
-                id = extended_tokenizer(tokens, tempHolders, id);
-                System.out.println("uid "+id);
+                id = extended_tokenizer(tokens, tempHolders);
+                //while tempHolders is not null, add the index to new TempHolders array
+                String[] tempHolders2 = new String[tempHolders.length];
+                int index = 0;
+                for (String tempHolder : tempHolders) {
+                    if (tempHolder != null) {
+                        tempHolders2[index] = tempHolder;
+                        id = tempHolders2[index];
+                        index++;
+                    }
+                }
+                //iterate and print the tempHolders
+                for (int j = 0; j < id.length(); j++) {
+                    System.out.println("tmp2 "+ tempHolders2[j]);
+                }
+                id = extended_tokenizer(tokens,tempHolders2);//iterate and print the tempHolders
+                for (int j = 0; j < id.length(); j++) {
+                    System.out.println("tmp2 "+ tempHolders2[j]);
+                }
+                // System.out.println("uid "+id);
+                // //iterate and print the tempHolders
+                // for (int j = 0; j < tempHolders.length; j++) {
+                //     System.out.println("tmp "+ tempHolders[j]);
+                // }
             }
         }
         return tokens;
     }
 
-    private static String extended_tokenizer(String[] tokens, String[] tempHolders, String id) {
+    private static String extended_tokenizer(String[] tokens, String[] tempHolders) {
+        String id = "";
+        System.out.println("--id: " + id);
         int count = 0;
         for (int j = 0; j < tempHolders.length; j++) {
             System.out.println("ou "+tempHolders[j]);
             if (getTokenType(tempHolders[j]) != null) {
                 id += tempHolders[j];
-                //remove value of the tempHolders[j] from the list of tempHolders
-                tempHolders[j] = null;
                 System.out.println("id "+id + " tempHolders[j] "+tempHolders[j]);
                 if(getTokenType(id) != null) {
+                    //remove value of the tempHolders[j] from the list of tempHolders
+                    tempHolders[j] = null;
                     tokens[tokens.length-1] = id;
                     System.out.println("tok "+tokens[tokens.length-1]);
                     count++;
                 }
             }
         }
+        System.out.println("count "+count);
         //return the inverse substring of the id from 0 to count.
         return id.substring(count);
     }
