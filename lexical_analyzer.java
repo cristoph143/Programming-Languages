@@ -20,6 +20,8 @@ import java.util.Scanner;
     =	    Equals_op
     1	    Constant
     ;	    Terminator
+    Problems Encountered:
+    1. The space between characters is subtle since some keywords are joined with other keyword. Example "a++;" or "a;"
 */
 
 public class lexical_analyzer {
@@ -57,14 +59,37 @@ public class lexical_analyzer {
 
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
-        String[] tokens = lexemes.split(" ");
+        String[] tokens = lexemes.split("");
         //check if the last tokens is equal to ";" then return the tokens
         if (tokens[tokens.length - 1].equals(";")) {
             return tokens;
         }
+        //while index of token is not equal to the getTokenType(tokens[i]), add to the string and send again to getTokenType(tokens[i])
+        String temp = "";
+        for (int i = 0; i < tokens.length; i++) {
+            temp = tokens[i];
+            //if getTokenType(tokens[i]) is not equal to the token type then add to the string
+            if (!getTokenType(tokens[i]).equals(getTokenType(temp))) {
+                temp = temp + tokens[i + 1];
+                tokens[i] = temp;
+                i++;
+                System.out.println(temp + " temp " + tokens[i] + " tokens " + temp);
+            }
+
+            // if (getTokenType(tokens[i]) == temp) {
+            //     temp += tokens[i];
+            //     System.out.println(temp);
+            // } else {
+            //     System.out.println(temp + " 1temp " + tokens[i] + " tokens " + temp);
+            //     temp += tokens[i];
+            //     tokens[i] = temp;
+            //     temp = "";
+            //     System.out.println(temp + " temp " + tokens[i] + " tokens " + temp);
+            // }
+        }
         return tokens;
     }
-
+    
     // getTokenType
     public static String getTokenType(String token) {
         if (token.equals("int") || token.equals("float") || token.equals("double")
