@@ -60,27 +60,28 @@ public class lexical_analyzer {
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
         String[] tokens = lexemes.split(" ");
-        //iterate the tokens
+        // iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
-            //if the returned value from getTokenType(tokens[i]) is not null then add
-            //index value to new array.
+            // if the returned value from getTokenType(tokens[i]) is not null then add
+            // index value to new array.
             if (getTokenType(tokens[i]) != null) {
                 tokens[i] = tokens[i];
             }
-            //if the returned value from getTokenType(tokens[i]) is null then
-            //split the tokens[i] by "" and add the it to temp holders array
+            // if the returned value from getTokenType(tokens[i]) is null then
+            // split the tokens[i] by "" and add the it to temp holders array
             else {
                 String[] tempHolders = tokens[i].split("");
                 System.out.println("tempHolders: ");
-                //iterate and pr tempHolders
+                // iterate and pr tempHolders
                 for (int j = 0; j < tempHolders.length; j++) {
                     System.out.println(tempHolders[j]);
                 }
-                //iterate the tempholders[i] and if the returned value from getTokenType(tempHolders[i]) 
-                //is not null, remove it from the list of tempHolders and add to the id string.
+                // iterate the tempholders[i] and if the returned value from
+                // getTokenType(tempHolders[i])
+                // is not null, remove it from the list of tempHolders and add to the id string.
                 String id = "";
                 id = extended_tokenizer(tokens, tempHolders);
-                //while tempHolders is not null, add the index to new TempHolders array
+                // while tempHolders is not null, add the index to new TempHolders array
                 String[] tempHolders2 = new String[tempHolders.length];
                 int index = 0;
                 for (String tempHolder : tempHolders) {
@@ -90,18 +91,18 @@ public class lexical_analyzer {
                         index++;
                     }
                 }
-                //iterate and print the tempHolders
+                // iterate and print the tempHolders
                 for (int j = 0; j < id.length(); j++) {
-                    System.out.println("tmp2 "+ tempHolders2[j]);
+                    System.out.println("tmp2 " + tempHolders2[j]);
                 }
-                id = extended_tokenizer(tokens,tempHolders2);//iterate and print the tempHolders
+                id = extended_tokenizer(tokens, tempHolders2);// iterate and print the tempHolders
                 for (int j = 0; j < id.length(); j++) {
-                    System.out.println("tmp2 "+ tempHolders2[j]);
+                    System.out.println("tmp2 " + tempHolders2[j]);
                 }
                 // System.out.println("uid "+id);
                 // //iterate and print the tempHolders
                 // for (int j = 0; j < tempHolders.length; j++) {
-                //     System.out.println("tmp "+ tempHolders[j]);
+                // System.out.println("tmp "+ tempHolders[j]);
                 // }
             }
         }
@@ -113,25 +114,28 @@ public class lexical_analyzer {
         System.out.println("--id: " + id);
         int count = 0;
         for (int j = 0; j < tempHolders.length; j++) {
-            System.out.println("ou "+tempHolders[j]);
-            if (getTokenType(tempHolders[j]) != null) {
-                id += tempHolders[j];
-                System.out.println("id "+id + " tempHolders[j] "+tempHolders[j]);
-                if(getTokenType(id) != null) {
-                    //remove value of the tempHolders[j] from the list of tempHolders
-                    tempHolders[j] = null;
-                    tokens[tokens.length-1] = id;
-                    System.out.println("tok "+tokens[tokens.length-1]);
-                    count++;
-                }
+            System.out.println("ou " + tempHolders[j]);
+            if (getTokenType(tempHolders[j]) == null) {
+                break;
             }
+
+            // if (getTokenType(tempHolders[j]) != null) {
+            id += tempHolders[j];
+            System.out.println("id " + id + " tempHolders[j] " + tempHolders[j]);
+            if (getTokenType(id) != null) {
+                // remove value of the tempHolders[j] from the list of tempHolders
+                tempHolders[j] = null;
+                tokens[tokens.length - 1] = id;
+                System.out.println("tok " + tokens[tokens.length - 1]);
+                count++;
+            }
+            // }
         }
-        System.out.println("count "+count);
-        //return the inverse substring of the id from 0 to count.
+        System.out.println("count " + count);
+        // return the inverse substring of the id from 0 to count.
         return id.substring(count);
     }
-    
-    
+
     // getTokenType
     public static String getTokenType(String token) {
         if (token.equals("int") || token.equals("float") || token.equals("double")
@@ -150,16 +154,16 @@ public class lexical_analyzer {
                 || token.equals("!")) {
             return "Operator";
         }
-        //else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return "identifier"
+        // else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return
+        // "identifier"
         else if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
             System.out.println("gettoken: " + token);
             return "Identifier";
         }
-        //else if the token is equal to "[0-9]+" then return "Constant"
+        // else if the token is equal to "[0-9]+" then return "Constant"
         else if (token.matches("[0-9]+")) {
             return "Constant";
-        }
-        else{
+        } else {
             return null;
         }
     }
