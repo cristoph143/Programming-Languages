@@ -82,20 +82,13 @@ public class lexical_analyzer {
                 for (int j = 0; j < tempHolders.length; j++) {
                     if (getTokenType(tempHolders[j]) != null) {
                         id += tempHolders[j];
-                        System.out.println("id: " + id);
+                        System.out.println("id "+id);
+                        if(getTokenType(id) != null) {
+                            tokens[tokens.length-1] = id;
+                            System.out.println("tok "+tokens[tokens.length-1]);
+                        }
                     }
                 }
-                //add the id to the tokens array
-                tokens[i] = id;
-                System.out.println("tokens[i]: " + tokens[i]);
-                //add the remaining tokens from tempHolders
-                for (int j = 0; j < tempHolders.length; j++) {
-                    if (getTokenType(tempHolders[j]) == null) {
-                        tokens[i] += tempHolders[j];
-                        System.out.println("tokens[i]: " + tokens[i]);
-                    }
-                }
-
             }
         }
         return tokens;
@@ -122,7 +115,7 @@ public class lexical_analyzer {
         }
         //else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return "identifier"
         else if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
-            System.out.println("token: " + token);
+            System.out.println("gettoken: " + token);
             return "Identifier";
         }
         //else if the token is equal to "[0-9]+" then return "Constant"
