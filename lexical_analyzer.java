@@ -71,14 +71,31 @@ public class lexical_analyzer {
             //split the tokens[i] by "" and add the it to temp holders array
             else {
                 String[] tempHolders = tokens[i].split("");
-                //iterate the tempHolders array
+                System.out.println("tempHolders: ");
+                //iterate and pr tempHolders
                 for (int j = 0; j < tempHolders.length; j++) {
-                    //if the returned value from getTokenType(tempHolders[j]) is not null then add
-                    //index value to new array.
+                    System.out.println(tempHolders[j]);
+                }
+                //iterate the tempholders[i] and if the returned value from getTokenType(tempHolders[i]) 
+                //is not null, remove it from the list of tempHolders and add to the id string.
+                String id = "";
+                for (int j = 0; j < tempHolders.length; j++) {
                     if (getTokenType(tempHolders[j]) != null) {
-                        tokens[i] = tempHolders[j];
+                        id += tempHolders[j];
+                        System.out.println("id: " + id);
                     }
                 }
+                //add the id to the tokens array
+                tokens[i] = id;
+                System.out.println("tokens[i]: " + tokens[i]);
+                //add the remaining tokens from tempHolders
+                for (int j = 0; j < tempHolders.length; j++) {
+                    if (getTokenType(tempHolders[j]) == null) {
+                        tokens[i] += tempHolders[j];
+                        System.out.println("tokens[i]: " + tokens[i]);
+                    }
+                }
+
             }
         }
         return tokens;
@@ -105,6 +122,7 @@ public class lexical_analyzer {
         }
         //else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return "identifier"
         else if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+            System.out.println("token: " + token);
             return "Identifier";
         }
         //else if the token is equal to "[0-9]+" then return "Constant"
