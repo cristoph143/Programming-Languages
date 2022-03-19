@@ -86,33 +86,49 @@ public class lexical_analyzer {
                 }
                 //copy the index value to the new string.
                 String temp_str = tokens[i];
-                System.out.print("2.  "+temp_str + " getTokenType " + getTokenType(temp_str) + " ");
-                // while temp_str is null, remove the last character and save it to temp_arr.
-                while (getTokenType(temp_str) == null) {
-                    //get the last character of temp_str
-                    String lastChar = temp_str.substring(temp_str.length() - 1);
-                    //print the last character
-                    System.out.print("3. -- "+lastChar);
-                    temp_str = temp_str.substring(0, temp_str.length() - 1);
-                    System.out.print(" 3.  "+temp_str + " ");
-                    // if the returned value from getTokenType(temp_str) is not null then add
-                    // index value to new array.
-                    if (getTokenType(temp_str) != null) {
-                        tokens[i] = temp_str;
-                        System.out.print(" 4.  "+tokens[i] + " ");
-                        break;
-                    }
-                    //else if the returned value is null then add the last character of the token to new array
-                    //and remove it to the tokens.
-                    else {
-                        //add the last character to the new array
-                        tokens[i] = lastChar;
-                        System.out.print(" 5.  "+tokens[i] + " ");
-                    }
+                temp_str = tokenized_extended(tokens, i, temp_str);
+                while(temp_str != ""){
+                    
+                temp_str = tokenized_extended(tokens, i, temp_str);
                 }
+                //print temp_str
+                System.out.print("\n2.  "+temp_str);
             }
         }
         return tokens;
+    }
+
+    private static String tokenized_extended(String[] tokens, int i, String temp_str) {
+        System.out.print("2.  "+temp_str + " getTokenType " + getTokenType(temp_str) + " ");
+        String tmpst = "";
+        // while temp_str is null, remove the last character and save it to temp_arr.
+        while (getTokenType(temp_str) == null) {
+            //get the last character of temp_str
+            String lastChar = temp_str.substring(temp_str.length() - 1);
+            //print the last character
+            System.out.print("3. -- "+lastChar);
+            tmpst += lastChar;
+            System.out.print(" 5.  "+tmpst + " ");
+            temp_str = temp_str.substring(0, temp_str.length() - 1);
+            System.out.print(" 3.  "+temp_str + " ");
+            // if the returned value from getTokenType(temp_str) is not null then add
+            // index value to new array.
+            if (getTokenType(temp_str) != null) {
+                tokens[i] = temp_str;
+                System.out.print(" 4.  "+tokens[i] + " ");
+                break;
+            }
+        }
+        //reverse the tmpst
+        String tmpst_rev = "";
+        for (int j = tmpst.length() - 1; j >= 0; j--) {
+            tmpst_rev += tmpst.charAt(j);
+        }
+        //add the tmpst_rev to the tokens[i]
+        tokens[i] += tmpst_rev;
+        //return the tmpst_rev
+        return tmpst_rev;
+
     }
 
     // getTokenType
