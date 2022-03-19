@@ -37,6 +37,10 @@ public class lexical_analyzer {
                 System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement");
                 System.exit(0);
             }
+            //store the last char of the lexemes and remove it to the original lexemes
+            // String lastChar = lexemes.substring(lexemes.length() - 1);
+            // lexemes = lexemes.substring(0, lexemes.length() - 1);
+
             // call tokenize(lexemes) to tokenize the source code and save it as a variable
             String[] tokens = tokenize(lexemes);
             // print the tokens
@@ -44,6 +48,7 @@ public class lexical_analyzer {
             for (int i = 0; i < tokens.length; i++) {
                 System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]));
             }
+            // System.out.println(lastChar + "\t" + getTokenType(lastChar));
         } catch (Exception e) {
             System.out.println("Error");
         }
@@ -68,50 +73,48 @@ public class lexical_analyzer {
             if (getTokenType(tokens[i]) != null) {
                 tokens[i] = tokens[i];
             }
-            //if the returned value from getTokenType(tokens[i]) is null then
-            //split the tokens[i] by "" and add the it to temp holders array
+            //else if the returned value is null then add the last character of the token to new array
+            //and remove it to the tokens.
             else {
-                String[] tempHolders = tokens[i].split("");
-                System.out.print("tempHolders: ");
-                //iterate and pr tempHolders
-                for (int j = 0; j < tempHolders.length; j++) {
-                    System.out.print(tempHolders[j] + " ");
+                //print the tokens[i]
+                System.out.print("\n1.  "+tokens[i]);
+                //copy the tokens[i] to new temp array without altering the array
+                String[] temp = tokens[i].split("");
+                //iterate and print temp
+                for (int j = 0; j < temp.length; j++) {
+                    System.out.print(" ?? "+ temp[j] + " :: ");
                 }
-                //iterate the tempholders[i] and if the returned value from getTokenType(tempHolders[i]) 
-                //is not null, remove it from the list of tempHolders and add to the id string.
-                String id = "";
-                id = extended_tokenizer(tokens, tempHolders);
+                //copy the index value to the new string.
+                String temp_str = tokens[i];
+                System.out.print("2.  "+temp_str + " getTokenType " + getTokenType(temp_str) + " ");
+                // while temp_str is null, remove the last character and save it to temp_arr.
+                while (getTokenType(temp_str) == null) {
+                    //get the last character of temp_str
+                    String lastChar = temp_str.substring(temp_str.length() - 1);
+                    //print the last character
+                    System.out.print("3. -- "+lastChar);
+                    temp_str = temp_str.substring(0, temp_str.length() - 1);
+                    System.out.print(" 3.  "+temp_str + " ");
+                    // if the returned value from getTokenType(temp_str) is not null then add
+                    // index value to new array.
+                    if (getTokenType(temp_str) != null) {
+                        tokens[i] = temp_str;
+                        System.out.print(" 4.  "+tokens[i] + " ");
+                        break;
+                    }
+                    //else if the returned value is null then add the last character of the token to new array
+                    //and remove it to the tokens.
+                    else {
+                        //add the last character to the new array
+                        tokens[i] = lastChar;
+                        System.out.print(" 5.  "+tokens[i] + " ");
+                    }
+                }
             }
         }
         return tokens;
     }
 
-    private static String extended_tokenizer(String[] tokens, String[] tempHolders) {
-        String id = "";
-        int count = 0;
-        System.out.println("\n");
-        for (int j = 0; j < tempHolders.length; j++) {
-            System.out.print("before[j]: "+tempHolders[j]);
-            if (getTokenType(tempHolders[j]) != null) {
-                id += tempHolders[j];
-                System.out.print(" id "+id + " tempHolders[j] "+tempHolders[j] + " ");
-                if(getTokenType(id) != null) {
-                    //remove value of the tempHolders[j] from the list of tempHolders
-                    tempHolders[j] = null;
-                    // System.arraycopy(tempHolders, j + 1, tempHolders, j, tempHolders.length - j - 1);
-                    tokens[tokens.length-1] = id;
-                    System.out.print(" After: "+tokens[tokens.length-1] +" Count: "+count +" ");
-                    count++;
-                }
-                System.out.println(" Aftered: "+tokens[tokens.length-1] +" Count: "+count);
-            }
-        }
-        System.out.println("count "+count);
-        //return the inverse substring of the id from 0 to count.
-        return id.substring(count);
-    }
-    
-    
     // getTokenType
     public static String getTokenType(String token) {
         if (token.equals("int") || token.equals("float") || token.equals("double")
