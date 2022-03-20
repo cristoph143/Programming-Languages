@@ -60,7 +60,8 @@ public class lexical_analyzer {
 
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
-        String[] tokens = lexemes.split(" ");
+        //tokenize the lexeme by one or multiple space.
+        String[] tokens = lexemes.split("\\s+");
         String[] tmp_array = new String[lexemes.length()];
         // iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
@@ -138,7 +139,7 @@ public class lexical_analyzer {
             // print the last character
             System.out.print(" \n\ttemp_str[lastChar] -> " + lastChar);
             tmpst += lastChar;
-            System.out.print(" \n\tcopy_temp_str[lastChar] -> " + tmpst + " ");
+            System.out.print(" \n\ttmptst -> " + tmpst + " ");
             temp_str = temp_str.substring(0, temp_str.length() - 1);
             System.out.print(" \n\ttemp_str[remaining] -> " + temp_str + " ");
             // if the returned value from getTokenType(temp_str) is not null then add
@@ -162,7 +163,6 @@ public class lexical_analyzer {
             + " \n\tReverse of tmpst -> " + tmpst_rev + " ");
         // return the tmpst_rev
         return tmpst_rev;
-
     }
 
     // getTokenType
