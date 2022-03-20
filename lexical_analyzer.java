@@ -68,28 +68,12 @@ public class lexical_analyzer {
             // if the returned value from getTokenType(tokens[i]) is not null then add
             // index value to new array.
             if (getTokenType(tokens[i]) != null) {
-                tokens[i] = tokens[i];
-                // add tokens[i] to tmp_a;
-                tmp_array[i] = tokens[i];
-                System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]) + " " 
-                    + tmp_array[i]);
+                getTokenNull(tokens, tmp_array, i);
             }
             // else if the returned value is null then add the last character of the token
             // to new array and remove it to the tokens.
             else {
-                String temp_str = tokens[i];
-                temp_str = tokenized_extended(tokens, i, temp_str);
-                System.out.println("\nReturn Last Char -> " + temp_str);
-                // check if the tokens[i] contains temp_str
-                if (tokens[i].contains(temp_str)) {
-                    // remove the temp_str from the tokens[i]
-                    tokens[i] = tokens[i].replace(temp_str, "");
-                    if (tmp_array[i] == null) {
-                        tmp_array[i] = tokens[i];
-                        System.out.println("tmp_array[i] -> " + tokens[i]);
-                    }
-                }
-                iterate_array(tokens, tmp_array, i, temp_str);
+                getTokenEqualNull(tokens, tmp_array, i);
             }
         }
         // print the tokens
@@ -105,6 +89,30 @@ public class lexical_analyzer {
             }
         }
         return tmp_array;
+    }
+
+    private static void getTokenNull(String[] tokens, String[] tmp_array, int i) {
+        tokens[i] = tokens[i];
+        // add tokens[i] to tmp_a;
+        tmp_array[i] = tokens[i];
+        System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]) + " " 
+            + tmp_array[i]);
+    }
+
+    private static void getTokenEqualNull(String[] tokens, String[] tmp_array, int i) {
+        String temp_str = tokens[i];
+        temp_str = tokenized_extended(tokens, i, temp_str);
+        System.out.println("\nReturn Last Char -> " + temp_str);
+        // check if the tokens[i] contains temp_str
+        if (tokens[i].contains(temp_str)) {
+            // remove the temp_str from the tokens[i]
+            tokens[i] = tokens[i].replace(temp_str, "");
+            if (tmp_array[i] == null) {
+                tmp_array[i] = tokens[i];
+                System.out.println("tmp_array[i] -> " + tokens[i]);
+            }
+        }
+        iterate_array(tokens, tmp_array, i, temp_str);
     }
 
     private static void iterate_array(String[] tokens, String[] tmp_array, int i, String temp_str) {
