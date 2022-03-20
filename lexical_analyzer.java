@@ -76,23 +76,27 @@ public class lexical_analyzer {
             //else if the returned value is null then add the last character of the token to new array
             //and remove it to the tokens.
             else {
-                //print the tokens[i]
-                System.out.print("\n1.  "+tokens[i]);
-                //copy the tokens[i] to new temp array without altering the array
-                String[] temp = tokens[i].split("");
-                //iterate and print temp
-                for (int j = 0; j < temp.length; j++) {
-                    System.out.print(" ?? "+ temp[j] + " :: ");
-                }
-                //copy the index value to the new string.
                 String temp_str = tokens[i];
                 temp_str = tokenized_extended(tokens, i, temp_str);
-                while(temp_str != ""){
-                    
-                temp_str = tokenized_extended(tokens, i, temp_str);
+                System.out.println("\n02.  "+temp_str);
+                //check if the tokens[i] contains temp_str
+                if (tokens[i].contains(temp_str)) {
+                    //remove the temp_str from the tokens[i]
+                    tokens[i] = tokens[i].replace(temp_str, "");
+                    System.out.println("\n0?3.  "+tokens[i]);
                 }
-                //print temp_str
-                System.out.print("\n2.  "+temp_str);
+                // tokens[i] = temp_str;
+                while(temp_str.length() > 0) {
+                    tokens[i] = temp_str;
+                    temp_str = tokenized_extended(tokens, i, temp_str);
+                    System.out.println("\n03.  "+temp_str + "\n" + tokens[i]); 
+                    //check if the tokens[i] contains temp_str
+                    if (tokens[i].contains(temp_str)) {
+                        //remove the temp_str from the tokens[i]
+                        tokens[i] = tokens[i].replace(temp_str, "");
+                        System.out.println("\n0?3.  "+tokens[i]);
+                    }
+                }
             }
         }
         return tokens;
@@ -115,10 +119,13 @@ public class lexical_analyzer {
             // index value to new array.
             if (getTokenType(temp_str) != null) {
                 tokens[i] = temp_str;
-                System.out.print(" 4.  "+tokens[i] + " ");
+                System.out.print(" 4.  "+temp_str + " ");
                 break;
+                // return tokens[i];
             }
         }
+        // tokens[i] = tmpst;
+        // System.out.print(" 9.  "+tokens[i] + " ");
         //reverse the tmpst
         String tmpst_rev = "";
         for (int j = tmpst.length() - 1; j >= 0; j--) {
@@ -126,6 +133,7 @@ public class lexical_analyzer {
         }
         //add the tmpst_rev to the tokens[i]
         tokens[i] += tmpst_rev;
+        System.out.print(" 6.  "+tokens[i] + " ");
         //return the tmpst_rev
         return tmpst_rev;
 
