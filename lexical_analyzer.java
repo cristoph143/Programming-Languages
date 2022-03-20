@@ -37,7 +37,7 @@ public class lexical_analyzer {
                 System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement");
                 System.exit(0);
             }
-            //store the last char of the lexemes and remove it to the original lexemes
+            // store the last char of the lexemes and remove it to the original lexemes
             // String lastChar = lexemes.substring(lexemes.length() - 1);
             // lexemes = lexemes.substring(0, lexemes.length() - 1);
 
@@ -65,76 +65,105 @@ public class lexical_analyzer {
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
         String[] tokens = lexemes.split(" ");
+        String[] tmp_array = new String[lexemes.length()];
         // String[] newTokens = new String[tokens.length + 2];
-        //iterate the tokens
+        // iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
-            //if the returned value from getTokenType(tokens[i]) is not null then add
-            //index value to new array.
+            // if the returned value from getTokenType(tokens[i]) is not null then add
+            // index value to new array.
             if (getTokenType(tokens[i]) != null) {
                 tokens[i] = tokens[i];
+                // add tokens[i] to tmp_a;
+                tmp_array[i] = tokens[i];
+                System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]) + " " + tmp_array[i]);
             }
-            //else if the returned value is null then add the last character of the token to new array
-            //and remove it to the tokens.
+
+            // else if the returned value is null then add the last character of the token
+            // to new array
+            // and remove it to the tokens.
             else {
                 String temp_str = tokens[i];
                 temp_str = tokenized_extended(tokens, i, temp_str);
-                System.out.println("\n02.  "+temp_str);
-                //check if the tokens[i] contains temp_str
+                System.out.println("\n02.  " + temp_str);
+                // check if the tokens[i] contains temp_str
                 if (tokens[i].contains(temp_str)) {
-                    //remove the temp_str from the tokens[i]
+                    // remove the temp_str from the tokens[i]
                     tokens[i] = tokens[i].replace(temp_str, "");
-                    System.out.println("\n0?3.  "+tokens[i]);
+                    if (tmp_array[i] == null) {
+                        tmp_array[i] = tokens[i];
+                        System.out.println("\n0?3.  " + tokens[i] + " " + tmp_array[i] + " i " + i);
+                    }
                 }
                 // tokens[i] = temp_str;
-                while(temp_str.length() > 0) {
+                while (temp_str.length() > 0) {
                     tokens[i] = temp_str;
                     temp_str = tokenized_extended(tokens, i, temp_str);
-                    System.out.println("\n03.  "+temp_str + "\n" + tokens[i]); 
-                    //check if the tokens[i] contains temp_str
+                    System.out.println("\n03.  " + temp_str + "\n" + tokens[i]);
+                    // check if the tokens[i] contains temp_str
                     if (tokens[i].contains(temp_str)) {
-                        //remove the temp_str from the tokens[i]
+                        // remove the temp_str from the tokens[i]
                         tokens[i] = tokens[i].replace(temp_str, "");
-                        System.out.println("\n0?3.  "+tokens[i]);
+                        System.out.println("\n0004.  " + tokens[i] + " " + tmp_array[i] + " i " + i);
+                        int j = 0;
+                        while (tmp_array[j] != null) {
+                            System.out.println(j + " " + tmp_array[j]);
+                            j++;
+                        }
+                        tmp_array[j] = tokens[i];
+                        System.out.println("\n0006." + tmp_array[j]);
                     }
                 }
             }
         }
-        return tokens;
+        // print the tokens
+        for (int i = 0; i < tmp_array.length; i++) {
+            System.out.print(tmp_array[i] + " ");
+            //if tmp_array is null, trim the array from the first null to end
+            if (tmp_array[i] == null) {
+                String[] new_array = new String[i];
+                for (int j = 0; j < i; j++) {
+                    new_array[j] = tmp_array[j];
+                }
+                return new_array;
+            }
+        }
+        System.out.println();
+        return tmp_array;
     }
 
     private static String tokenized_extended(String[] tokens, int i, String temp_str) {
-        System.out.print("2.  "+temp_str + " getTokenType " + getTokenType(temp_str) + " ");
+        System.out.print("2.  " + temp_str + " getTokenType " + getTokenType(temp_str) + " ");
         String tmpst = "";
         // while temp_str is null, remove the last character and save it to temp_arr.
         while (getTokenType(temp_str) == null) {
-            //get the last character of temp_str
+            // get the last character of temp_str
             String lastChar = temp_str.substring(temp_str.length() - 1);
-            //print the last character
-            System.out.print("3. -- "+lastChar);
+            // print the last character
+            System.out.print("3. -- " + lastChar);
             tmpst += lastChar;
-            System.out.print(" 5.  "+tmpst + " ");
+            System.out.print(" 5.  " + tmpst + " ");
             temp_str = temp_str.substring(0, temp_str.length() - 1);
-            System.out.print(" 3.  "+temp_str + " ");
+            System.out.print(" 3.  " + temp_str + " ");
             // if the returned value from getTokenType(temp_str) is not null then add
             // index value to new array.
             if (getTokenType(temp_str) != null) {
                 tokens[i] = temp_str;
-                System.out.print(" 4.  "+temp_str + " ");
+                System.out.print(" 4.  " + temp_str + " ");
                 break;
                 // return tokens[i];
             }
         }
         // tokens[i] = tmpst;
-        // System.out.print(" 9.  "+tokens[i] + " ");
-        //reverse the tmpst
+        // System.out.print(" 9. "+tokens[i] + " ");
+        // reverse the tmpst
         String tmpst_rev = "";
         for (int j = tmpst.length() - 1; j >= 0; j--) {
             tmpst_rev += tmpst.charAt(j);
         }
-        //add the tmpst_rev to the tokens[i]
+        // add the tmpst_rev to the tokens[i]
         tokens[i] += tmpst_rev;
-        System.out.print(" 6.  "+tokens[i] + " ");
-        //return the tmpst_rev
+        System.out.print(" 6.  " + tokens[i] + " ");
+        // return the tmpst_rev
         return tmpst_rev;
 
     }
@@ -157,16 +186,16 @@ public class lexical_analyzer {
                 || token.equals("!")) {
             return "Operator";
         }
-        //else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return "identifier"
+        // else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return
+        // "identifier"
         else if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
             // System.out.println("gettoken: " + token);
             return "Identifier";
         }
-        //else if the token is equal to "[0-9]+" then return "Constant"
+        // else if the token is equal to "[0-9]+" then return "Constant"
         else if (token.matches("[0-9]+")) {
             return "Constant";
-        }
-        else{
+        } else {
             return null;
         }
     }
