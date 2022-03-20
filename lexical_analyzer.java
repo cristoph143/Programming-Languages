@@ -85,8 +85,7 @@ public class lexical_analyzer {
                     tokens[i] = tokens[i].replace(temp_str, "");
                     if (tmp_array[i] == null) {
                         tmp_array[i] = tokens[i];
-                        System.out.println("tmp_array["+ i + "] -> " + tokens[i] 
-                            + " " + tmp_array[i] + " i " + i);
+                        System.out.println("tmp_array[i] -> " + tokens[i]);
                     }
                 }
                 // tokens[i] = temp_str;
@@ -99,7 +98,7 @@ public class lexical_analyzer {
                         // remove the temp_str from the tokens[i]
                         tokens[i] = tokens[i].replace(temp_str, "");
                         System.out.println("\nSubset of token and temp_str -> " 
-                            + tokens[i] + " \nTemp_array[" + i + "] -> " + tmp_array[i]);
+                            + tokens[i] + " \nTemp_array[i] -> " + tmp_array[i]);
                         int j = 0;
                         System.out.println("j tmp_array[j]");                        
                         while (tmp_array[j] != null) {
@@ -146,8 +145,9 @@ public class lexical_analyzer {
             // index value to new array.
             if (getTokenType(temp_str) != null) {
                 tokens[i] = temp_str;
-                System.out.print(" \n\ttemp_str[lastChar] -> " 
+                System.out.print(" \n\ttemp_str[remaining] -> " 
                     + "getTokenType(" + temp_str +") == " + getTokenType(temp_str));
+                System.out.print(" \n\ttemp_str[remaining] -> " + temp_str);
                 break;
             }
         }
@@ -158,7 +158,8 @@ public class lexical_analyzer {
         }
         // add the tmpst_rev to the tokens[i]
         tokens[i] += tmpst_rev;
-        System.out.print(" \n\tReverse of tmpst (tokens[i]) -> " + tokens[i] + " ");
+        System.out.print( "\n\ttmpst -> " + tmpst + " "
+            + " \n\tReverse of tmpst -> " + tmpst_rev + " ");
         // return the tmpst_rev
         return tmpst_rev;
 
