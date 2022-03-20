@@ -89,27 +89,7 @@ public class lexical_analyzer {
                         System.out.println("tmp_array[i] -> " + tokens[i]);
                     }
                 }
-                // tokens[i] = temp_str;
-                while (temp_str.length() > 0) {
-                    tokens[i] = temp_str;
-                    temp_str = tokenized_extended(tokens, i, temp_str);
-                    System.out.println("\n2nd.Return temp_str -> " + temp_str);
-                    // check if the tokens[i] contains temp_str
-                    if (tokens[i].contains(temp_str)) {
-                        // remove the temp_str from the tokens[i]
-                        tokens[i] = tokens[i].replace(temp_str, "");
-                        System.out.println("\nSubset of token and temp_str -> " 
-                            + tokens[i] + " \nTemp_array[i] -> " + tmp_array[i]);
-                        int j = 0;
-                        System.out.println("j tmp_array[j]");                        
-                        while (tmp_array[j] != null) {
-                            System.out.println(j + " " + tmp_array[j]);
-                            j++;
-                        }
-                        tmp_array[j] = tokens[i];
-                        System.out.println("Insert tmp_array[i] -> " + tmp_array[j]);
-                    }
-                }
+                iterate_array(tokens, tmp_array, i, temp_str);
             }
         }
         // print the tokens
@@ -127,9 +107,47 @@ public class lexical_analyzer {
         return tmp_array;
     }
 
+    private static void iterate_array(String[] tokens, String[] tmp_array, int i, String temp_str) {
+        while (temp_str.length() > 0) {
+            tokens[i] = temp_str;
+            temp_str = tokenized_extended(tokens, i, temp_str);
+            System.out.println("\n2nd.Return temp_str -> " + temp_str);
+            // check if the tokens[i] contains temp_str
+            if (tokens[i].contains(temp_str)) {
+                // remove the temp_str from the tokens[i]
+                tokens[i] = tokens[i].replace(temp_str, "");
+                System.out.println("\nSubset of token and temp_str -> " 
+                    + tokens[i] + " \nTemp_array[i] -> " + tmp_array[i]);
+                int j = 0;
+                System.out.println("j tmp_array[j]");                        
+                while (tmp_array[j] != null) {
+                    System.out.println(j + " " + tmp_array[j]);
+                    j++;
+                }
+                tmp_array[j] = tokens[i];
+                System.out.println("Insert tmp_array[i] -> " + tmp_array[j]);
+            }
+        }
+    }
+
     private static String tokenized_extended(String[] tokens, int i, String temp_str) {
         System.out.print("Tokenize Ex -> ");
         String tmpst = "";
+        tmpst = getTokenMethod(tokens, i, temp_str, tmpst);
+        // reverse the tmpst
+        String tmpst_rev = "";
+        for (int j = tmpst.length() - 1; j >= 0; j--) {
+            tmpst_rev += tmpst.charAt(j);
+        }
+        // add the tmpst_rev to the tokens[i]
+        tokens[i] += tmpst_rev;
+        System.out.print( "\n\ttmpst -> " + tmpst + " "
+            + " \n\tReverse of tmpst -> " + tmpst_rev + " ");
+        // return the tmpst_rev
+        return tmpst_rev;
+    }
+
+    private static String getTokenMethod(String[] tokens, int i, String temp_str, String tmpst) {
         // while temp_str is null, remove the last character and save it to temp_arr.
         while (getTokenType(temp_str) == null) {
             // get the last character of temp_str
@@ -152,17 +170,7 @@ public class lexical_analyzer {
                 break;
             }
         }
-        // reverse the tmpst
-        String tmpst_rev = "";
-        for (int j = tmpst.length() - 1; j >= 0; j--) {
-            tmpst_rev += tmpst.charAt(j);
-        }
-        // add the tmpst_rev to the tokens[i]
-        tokens[i] += tmpst_rev;
-        System.out.print( "\n\ttmpst -> " + tmpst + " "
-            + " \n\tReverse of tmpst -> " + tmpst_rev + " ");
-        // return the tmpst_rev
-        return tmpst_rev;
+        return tmpst;
     }
 
     // getTokenType
