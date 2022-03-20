@@ -128,26 +128,26 @@ public class lexical_analyzer {
     }
 
     private static String tokenized_extended(String[] tokens, int i, String temp_str) {
-        System.out.print("Tokenize Ex -> \n\tgetTokenType(" + temp_str +") == " 
-            + getTokenType(temp_str) + " ");
+        System.out.print("Tokenize Ex -> ");
         String tmpst = "";
         // while temp_str is null, remove the last character and save it to temp_arr.
         while (getTokenType(temp_str) == null) {
             // get the last character of temp_str
             String lastChar = temp_str.substring(temp_str.length() - 1);
+            System.out.print("\n\ttemp_str -> "+ temp_str + " \n\tgetTokenType(" + temp_str +") == " 
+            + getTokenType(temp_str) + " ");
             // print the last character
             System.out.print(" \n\ttemp_str[lastChar] -> " + lastChar);
             tmpst += lastChar;
             System.out.print(" \n\tcopy_temp_str[lastChar] -> " + tmpst + " ");
             temp_str = temp_str.substring(0, temp_str.length() - 1);
-            System.out.print(" \n\ttemp_str[lastChar] -> " + temp_str + " ");
+            System.out.print(" \n\ttemp_str[remaining] -> " + temp_str + " ");
             // if the returned value from getTokenType(temp_str) is not null then add
             // index value to new array.
             if (getTokenType(temp_str) != null) {
                 tokens[i] = temp_str;
                 System.out.print(" \n\ttemp_str[lastChar] -> " 
-                    + "getTokenType(" + temp_str +") == " + getTokenType(temp_str) + " "
-                    + temp_str + " ");
+                    + "getTokenType(" + temp_str +") == " + getTokenType(temp_str));
                 break;
             }
         }
@@ -158,7 +158,7 @@ public class lexical_analyzer {
         }
         // add the tmpst_rev to the tokens[i]
         tokens[i] += tmpst_rev;
-        System.out.print(" | Reverse of tmpst  " + tokens[i] + " ");
+        System.out.print(" \n\tReverse of tmpst (tokens[i]) -> " + tokens[i] + " ");
         // return the tmpst_rev
         return tmpst_rev;
 
