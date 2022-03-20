@@ -112,21 +112,22 @@ public class lexical_analyzer {
                 System.out.println("tmp_array[i] -> " + tokens[i]);
             }
         }
-        iterate_array(tokens, tmp_array, i, temp_str);
+        tmp_array = iterate_array(tokens, tmp_array, i, temp_str);
+        System.out.println("--tmp_array" + tmp_array[i]);
     }
 
-    private static void iterate_array(String[] tokens, String[] tmp_array, int i, String temp_str) {
+    private static String[] iterate_array(String[] tokens, String[] tmp_array, int i, String temp_str) {
         while (temp_str.length() > 0) {
             tokens[i] = temp_str;
             temp_str = tokenized_extended(tokens, i, temp_str);
             System.out.println("\n2nd.Return temp_str -> " + temp_str);
             // check if the tokens[i] contains temp_str
+            int j = 0;
             if (tokens[i].contains(temp_str)) {
                 // remove the temp_str from the tokens[i]
                 tokens[i] = tokens[i].replace(temp_str, "");
                 System.out.println("\nSubset of token and temp_str -> " 
                     + tokens[i] + " \nTemp_array[i] -> " + tmp_array[i]);
-                int j = 0;
                 System.out.println("j tmp_array[j]");                        
                 while (tmp_array[j] != null) {
                     System.out.println(j + " " + tmp_array[j]);
@@ -136,6 +137,7 @@ public class lexical_analyzer {
                 System.out.println("Insert tmp_array[i] -> " + tmp_array[j]);
             }
         }
+        return tmp_array;
     }
 
     private static String tokenized_extended(String[] tokens, int i, String temp_str) {
@@ -198,6 +200,12 @@ public class lexical_analyzer {
                 || token.equals(">=") || token.equals("&&") || token.equals("||")
                 || token.equals("!")) {
             return "Operator";
+        }
+        //else if the token is equal to special characters then return special characters
+        else if (token.equals("{") || token.equals("}") || token.equals("[")
+                || token.equals("]") || token.equals("(") || token.equals(")")
+                || token.equals(".") || token.equals(",")) {
+            return "Special Character";
         }
         // else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return
         // "identifier"
