@@ -1,6 +1,8 @@
 # Programming-Languages
 ## Lexical Analyzer
 
+![main](main_flowchart.png)
+
 ```
 Enter the source code: 
 int  a = b1 *b2;
