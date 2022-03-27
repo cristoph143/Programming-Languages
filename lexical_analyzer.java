@@ -32,11 +32,6 @@ public class lexical_analyzer {
             // input the source code
             System.out.println("Enter the source code: ");
             lexemes = scan.nextLine();
-            // if isTerminator(lexemes) is false then exit the program.
-            if (!isTerminator(lexemes)) {
-                System.out.println("Syntax error, insert \";\" to complete Local Variable Declaration Statement");
-                System.exit(0);
-            }
             // call tokenize(lexemes) to tokenize the source code and save it as a variable
             String[] tokens = tokenize(lexemes);
             // print the tokens
@@ -50,19 +45,11 @@ public class lexical_analyzer {
         }
     }
 
-    // return true if the last character of the string is a ";"
-    public static boolean isTerminator(String s) {
-        if (s.charAt(s.length() - 1) == ';') {
-            return true;
-        }
-        return false;
-    }
-
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
         //tokenize the lexeme by one or multiple space.
         String[] tokens = lexemes.split("\\s+");
-        String[] tmp_array = new String[lexemes.length()];
+        String[] tmp_array = new String[lexemes.length()]; 
         // iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
             // if the returned value from getTokenType(tokens[i]) is not null then add
