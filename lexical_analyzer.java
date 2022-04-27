@@ -25,25 +25,6 @@ import java.util.Scanner;
 */
 
 public class lexical_analyzer {
-    public static void main(String[] args) {
-        try (
-                Scanner scan = new Scanner(System.in);) {
-            String lexemes = new String();
-            // input the source code
-            System.out.println("Enter the source code: ");
-            lexemes = scan.nextLine();
-            // call tokenize(lexemes) to tokenize the source code and save it as a variable
-            String[] tokens = tokenize(lexemes);
-            // print the tokens
-            System.out.println("\nToken\tType");
-            for (int i = 0; i < tokens.length; i++) {
-                System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]));
-            }
-        } catch (Exception e) {
-            System.out.println("Error");
-        }
-    }
-
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
         //tokenize the lexeme by one or multiple space.
@@ -91,6 +72,15 @@ public class lexical_analyzer {
         // scan the temp_str from the first character to the last character
         for (int j = 0; j < temp_str.length(); j++) {
             tmp_strs = temp_str.substring(j, j + 1);
+            // if tmps_strs is alpha or digit then add the character to tmp_strs
+            // if (tmp_strs.matches("[a-zA-Z0-9]")) {
+            //     // iterate tmp_stars until index is not alpha or digit
+            //     while (tmp_strs.matches("[a-zA-Z0-9]")) {
+            //         tmp_strs += temp_str.substring(j, j + 1);
+            //         j++;
+            //         System.out.println(tmp_strs + "\tgh" + getTokenType(tmp_strs));
+            //     }
+            // }
             // print tmp_strs
             System.out.println(tmp_strs + "\t1111" + getTokenType(tmp_strs));
             // if tmp_strs is = "+" or "-" or "&" or "|" or "=" or ">" or "<" or
