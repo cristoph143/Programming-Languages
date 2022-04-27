@@ -39,7 +39,6 @@ public class lexical_analyzer {
             for (int i = 0; i < tokens.length; i++) {
                 System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]));
             }
-            // System.out.println(lastChar + "\t" + getTokenType(lastChar));
         } catch (Exception e) {
             System.out.println("Error");
         }
@@ -88,86 +87,46 @@ public class lexical_analyzer {
 
     private static void getTokenEqualNull(String[] tokens, String[] tmp_array, int i) {
         String temp_str = tokens[i];
-        temp_str = tokenized_extended(tokens, i, temp_str);
-        System.out.println("\nReturn Last Char -> " + temp_str);
-        // check if the tokens[i] contains temp_str
-        if (tokens[i].contains(temp_str)) {
-            // remove the temp_str from the tokens[i]
-            tokens[i] = tokens[i].replace(temp_str, "");
-            if (tmp_array[i] == null) {
-                tmp_array[i] = tokens[i];
-                System.out.println("tmp_array[i] -> " + tokens[i]);
+        String tmp_strs = "";
+        // scan the temp_str from the first character to the last character
+        for (int j = 0; j < temp_str.length(); j++) {
+            tmp_strs = temp_str.substring(j, j + 1);
+            // print tmp_strs
+            System.out.println(tmp_strs + "\t1111" + getTokenType(tmp_strs));
+            // if tmp_strs is = "+" or "-" or "&" or "|" or "=" or ">" or "<" or
+            // "!" or "*" or "/" or "%" then check the next index if it is 
+            // the same character mention above then add the two characters to
+            // tmp_strs
+            if (tmp_strs.equals("+") || tmp_strs.equals("-") || tmp_strs.equals("&")
+                || tmp_strs.equals("|") || tmp_strs.equals("=") || tmp_strs.equals(">")
+                || tmp_strs.equals("<") || tmp_strs.equals("!") || tmp_strs.equals("*")
+                || tmp_strs.equals("/") || tmp_strs.equals("%")) {
+                    tmp_strs = temp_str.substring(j, j + 2);
+                    System.out.println(tmp_strs + "\t1" + getTokenType(tmp_strs));
+                    // if tmp_strs is "++" or "--" or "&&" or "||" or "==" or "!=" or
+                    // ">=" or "<=" or "!=" or "*=" or "/=" or "%=" then add the two characters
+                    // to tmp_strs
+                    if (tmp_strs.equals("++") || tmp_strs.equals("--") || tmp_strs.equals("&&")
+                        || tmp_strs.equals("||") || tmp_strs.equals("==") || tmp_strs.equals("!=")
+                        || tmp_strs.equals(">=") || tmp_strs.equals("<=") || tmp_strs.equals("!=")
+                        || tmp_strs.equals("*=") || tmp_strs.equals("/=") || tmp_strs.equals("%=")) {
+                        tmp_strs = temp_str.substring(j, j + 2);
+                        System.out.println(tmp_strs + "\t2" + getTokenType(tmp_strs));
+                        j++;
+                    }
+                    // if tmp_strs is null
+                    else if ((getTokenType(tmp_strs) == null)) {
+                        tmp_strs = temp_str.substring(j, j + 1);
+                    }
             }
-        }
-        tmp_array = iterate_array(tokens, tmp_array, i, temp_str);
-        System.out.println("--tmp_array" + tmp_array[i]);
-    }
-
-    private static String[] iterate_array(String[] tokens, String[] tmp_array, int i, String temp_str) {
-        while (temp_str.length() > 0) {
-            tokens[i] = temp_str;
-            temp_str = tokenized_extended(tokens, i, temp_str);
-            System.out.println("\n2nd.Return temp_str -> " + temp_str);
-            // check if the tokens[i] contains temp_str
-            int j = 0;
-            if (tokens[i].contains(temp_str)) {
-                // remove the temp_str from the tokens[i]
-                tokens[i] = tokens[i].replace(temp_str, "");
-                System.out.println("\nSubset of token and temp_str -> " 
-                    + tokens[i] + " \nTemp_array[i] -> " + tmp_array[i]);
-                System.out.println("j tmp_array[j]");                        
-                while (tmp_array[j] != null) {
-                    System.out.println(j + " " + tmp_array[j]);
-                    j++;
-                }
-                tmp_array[j] = tokens[i];
-                System.out.println("Insert tmp_array[i] -> " + tmp_array[j]);
+            System.out.println(tmp_strs + "\t" + getTokenType(tmp_strs));
+            // while tmp_array is not null, increment the index value of tmp_array
+            while(tmp_array[i] != null) {
+                i++;
             }
+            // add the tmp_strs to tmp_array
+            tmp_array[i] = tmp_strs;
         }
-        return tmp_array;
-    }
-
-    private static String tokenized_extended(String[] tokens, int i, String temp_str) {
-        System.out.print("Tokenize Ex -> ");
-        String tmpst = "";
-        tmpst = getTokenMethod(tokens, i, temp_str, tmpst);
-        // reverse the tmpst
-        String tmpst_rev = "";
-        for (int j = tmpst.length() - 1; j >= 0; j--) {
-            tmpst_rev += tmpst.charAt(j);
-        }
-        // add the tmpst_rev to the tokens[i]
-        tokens[i] += tmpst_rev;
-        System.out.print( "\n\ttmpst -> " + tmpst + " "
-            + " \n\tReverse of tmpst -> " + tmpst_rev + " ");
-        // return the tmpst_rev
-        return tmpst_rev;
-    }
-
-    private static String getTokenMethod(String[] tokens, int i, String temp_str, String tmpst) {
-        // while temp_str is null, remove the last character and save it to temp_arr.
-        while (getTokenType(temp_str) == null) {
-            // get the last character of temp_str
-            String lastChar = temp_str.substring(temp_str.length() - 1);
-            System.out.print("\n\ttemp_str -> "+ temp_str + " \n\tgetTokenType(" + temp_str +") == " 
-            + getTokenType(temp_str) + " ");
-            // print the last character
-            System.out.print(" \n\ttemp_str[lastChar] -> " + lastChar);
-            tmpst += lastChar;
-            System.out.print(" \n\ttmptst -> " + tmpst + " ");
-            temp_str = temp_str.substring(0, temp_str.length() - 1);
-            System.out.print(" \n\ttemp_str[remaining] -> " + temp_str + " ");
-            // if the returned value from getTokenType(temp_str) is not null then add
-            // index value to new array.
-            if (getTokenType(temp_str) != null) {
-                tokens[i] = temp_str;
-                System.out.print(" \n\ttemp_str[remaining] -> " 
-                    + "getTokenType(" + temp_str +") == " + getTokenType(temp_str));
-                System.out.print(" \n\ttemp_str[remaining] -> " + temp_str);
-                break;
-            }
-        }
-        return tmpst;
     }
 
     // getTokenType
@@ -180,19 +139,39 @@ public class lexical_analyzer {
             return "Equals_op";
         } else if (token.equals(";")) {
             return "Terminator";
+        } else if (token.equals("+=") || token.equals("-=") || token.equals("*=")
+                || token.equals("/=") || token.equals("%=") || token.equals("^=")) {
+            return "Assignment_op";
+        } else if (token.equals("++") || token.equals("--")) {
+            return "Increment_op";
         } else if (token.equals("+") || token.equals("-") || token.equals("*")
-                || token.equals("/") || token.equals("%") || token.equals("++")
-                || token.equals("--") || token.equals("==") || token.equals("!=")
-                || token.equals("<") || token.equals(">") || token.equals("<=")
-                || token.equals(">=") || token.equals("&&") || token.equals("||")
-                || token.equals("!")) {
+                || token.equals("/") || token.equals("%") || token.equals("^")) {
             return "Operator";
-        }
-        //else if the token is equal to special characters then return special characters
-        else if (token.equals("{") || token.equals("}") || token.equals("[")
-                || token.equals("]") || token.equals("(") || token.equals(")")
-                || token.equals(".") || token.equals(",")) {
-            return "Special Character";
+        } else if (token.equals("=") || token.equals("==") || token.equals("!=")
+                || token.equals("<") || token.equals(">") || token.equals("<=")
+                || token.equals(">=")) {
+            return "Comparison_op";
+        } else if (token.equals("&&") || token.equals("||")
+                || token.equals("!")) {
+            return "Logical_op";
+        } else if (token.equals("(")) {
+            return "Left_parenthesis";
+        } else if (token.equals(")")) {
+            return "Right_parenthesis";
+        } else if (token.equals("{")) {
+            return "Left_brace";
+        } else if (token.equals("}")) {
+            return "Right_brace";
+        } else if (token.equals("[")) {
+            return "Left_bracket";
+        } else if (token.equals("]")) {
+            return "Right_bracket";
+        } else if (token.equals(";")) {
+            return "Terminator";
+        } else if (token.equals(".")) {
+            return "Dot";
+        } else if (token.equals(",")) {
+            return "Comma";
         }
         // else if the token is equal to another "[a-zA-Z_][a-zA-Z0-9_]*" then return
         // "identifier"
@@ -200,8 +179,8 @@ public class lexical_analyzer {
             // System.out.println("gettoken: " + token);
             return "Identifier";
         }
-        // else if the token is equal to "[0-9]+" then return "Constant"
-        else if (token.matches("[0-9]+")) {
+        // else if the token is equal to "[0-9]*" then return "Constant"
+        else if (token.matches("[0-9]*")) {
             return "Constant";
         } else {
             return null;
