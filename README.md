@@ -1,81 +1,170 @@
 # Programming-Languages
 ## Lexical Analyzer
 
-![main](main_flowchart.png)
-
 ```
 Enter the source code: 
-int  a = b1 *b2;
-int     Data Type int
-a       Identifier a
-=       Equals_op =
-b1      Identifier b1
-Tokenize Ex -> 
-        temp_str -> *b2;
-        getTokenType(*b2;) == null  
-        temp_str[lastChar] -> ; 
-        tmptst -> ;  
-        temp_str[remaining] -> *b2
-        temp_str -> *b2
-        getTokenType(*b2) == null  
-        temp_str[lastChar] -> 2 
-        tmptst -> ;2  
-        temp_str[remaining] -> *b
-        temp_str -> *b
-        getTokenType(*b) == null  
-        temp_str[lastChar] -> b 
-        tmptst -> ;2b  
-        temp_str[remaining] -> *  
-        temp_str[remaining] -> getTokenType(*) == Operator 
-        temp_str[remaining] -> *
-        tmpst -> ;2b
-        Reverse of tmpst -> b2;
-Return Last Char -> b2;
-tmp_array[i] -> *
-Tokenize Ex -> 
-        temp_str -> b2;
-        getTokenType(b2;) == null  
-        temp_str[lastChar] -> ; 
-        tmptst -> ;  
-        temp_str[remaining] -> b2  
-        temp_str[remaining] -> getTokenType(b2) == Identifier 
-        temp_str[remaining] -> b2
-        tmpst -> ;
-        Reverse of tmpst -> ;
-2nd.Return temp_str -> ;
+int temp2+=(temp23*23.4%)/2;
 
-Subset of token and temp_str -> b2
-Temp_array[i] -> *
-j tmp_array[j]
-0 int
-1 a
-2 =
-3 b1
-4 *
-Insert tmp_array[i] -> b2
-Tokenize Ex -> 
-        tmpst ->
-        Reverse of tmpst ->
-2nd.Return temp_str ->
+        int     Data Type int 
+        t       1?Identifier  
+        t       1111Identifier
+        t       Identifier    
+        e       1?Identifier  
+        e       1111Identifier
+        e       Identifier
+        m       1?Identifier
+        m       1111Identifier
+        m       Identifier
+        p       1?Identifier
+        p       1111Identifier
+        p       Identifier
+        2       1?Constant
+        2       1111Constant
+        2       Constant
+        +       1?Operator
+        +       1111Operator
+        +=      1Assignment_op
+        +=      2Assignment_op
+        +=      Assignment_op
+        (       1?Left_parenthesis
+        (       1111Left_parenthesis
+        (       Left_parenthesis
+        t       1?Identifier
+        t       1111Identifier
+        t       Identifier
+        e       1?Identifier
+        e       1111Identifier
+        e       Identifier
+        m       1?Identifier
+        m       1111Identifier
+        m       Identifier
+        p       1?Identifier
+        p       1111Identifier
+        p       Identifier
+        2       1?Constant
+        2       1111Constant
+        2       Constant
+        3       1?Constant
+        3       1111Constant
+        3       Constant
+        *       1?Operator
+        *       1111Operator
+        *2      1null
+        *       Operator
+        2       1?Constant
+        2       1111Constant
+        2       Constant
+        3       1?Constant
+        3       1111Constant
+        3       Constant
+        .       1?Dot
+        .       1111Dot
+        .       Dot
+        4       1?Constant
+        4       1111Constant
+        4       Constant
+        %       1?Operator
+        %       1111Operator
+        %)      1null
+        %       Operator
+        )       1?Right_parenthesis
+        )       1111Right_parenthesis
+        )       Right_parenthesis
+        /       1?Operator
+        /       1111Operator
+        /2      1null
+        /       Operator
+        2       1?Constant
+        2       1111Constant
+        2       Constant
+        ;       1?Terminator
+        ;       1111Terminator
+        ;       Terminator
+        int t e m p 2 += ( t e m p 2 3 * 2 3 . 4 % ) / 2 ; null 
+        Token   Type
+        int     Data Type
+        t       Identifier
+        e       Identifier
+        m       Identifier
+        p       Identifier
+        2       Constant
+        +=      Assignment_op
+        (       Left_parenthesis
+        t       Identifier
+        e       Identifier
+        m       Identifier
+        p       Identifier
+        2       Constant
+        3       Constant
+        *       Operator
+        2       Constant
+        3       Constant
+        .       Dot
+        4       Constant
+        %       Operator
+        )       Right_parenthesis
+        /       Operator
+        2       Constant
+        ;       Terminator
+        int     jaaData Type
+        temp2   jhIdentifier
+        +=      jaaAssignment_op
+        (       jaaLeft_parenthesis
+        temp23  jhIdentifier
+        *       jaaOperator
+        23      -->Constant
+        .       jaaDot
+        4       -->Constant
+        %       jaaOperator
+        )       jaaRight_parenthesis
+        /       jaaOperator
+        2       -->Constant
+        ;       jaaTerminator
 
-Subset of token and temp_str -> ;
-Temp_array[i] -> *
-j tmp_array[j]
-0 int
-1 a
-2 =
-3 b1
-4 *
-5 b2
-Insert tmp_array[i] -> ;
---tmp_array*
-int a = b1 * b2 ; null
-Token   Type
-int     Data Type
-a       Identifier
-=       Equals_op
-b1      Identifier
-*       Operator
-b2      Identifier
-;       Terminator
+        Final Token     Type
+        int     Data Type
+        temp2   Identifier
+        +=      Assignment_op
+        (       Left_parenthesis
+        temp23  Identifier
+        *       Operator
+        23      Constant
+        .       Dot
+        4       Constant
+        %       Operator
+        )       Right_parenthesis
+        /       Operator
+        2       Constant
+        ;       Terminator
+
+        Token   Type
+        int     Data Type
+        temp2   Identifier
+        +=      Assignment_op
+        (       Left_parenthesis
+        temp23  Identifier
+        *       Operator
+        23      Constant
+        .       Dot
+        4       Constant
+        %       Operator
+        )       Right_parenthesis
+        /       Operator
+        2       Constant
+        ;       Terminator
+
+        Syntax  Type
+        int     Data Type
+        temp2   Identifier
+        (       Left_parenthesis
+        temp23  Identifier
+        *       Operator
+        23      Constant
+        .       Dot
+        4       Constant
+        %       Operator
+        )       Right_parenthesis
+        /       Operator
+        2       Constant
+        ;       Terminator
 ```
