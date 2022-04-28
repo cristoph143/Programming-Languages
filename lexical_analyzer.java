@@ -27,9 +27,9 @@ import java.util.Scanner;
 public class lexical_analyzer {
     // return the tokenized form of the lexemes by tokenizing the space and ";"
     public static String[] tokenize(String lexemes) {
-        //tokenize the lexeme by one or multiple space.
+        // tokenize the lexeme by one or multiple space.
         String[] tokens = lexemes.split("\\s+");
-        String[] tmp_array = new String[lexemes.length()]; 
+        String[] tmp_array = new String[lexemes.length()];
         // iterate the tokens
         for (int i = 0; i < tokens.length; i++) {
             // if the returned value from getTokenType(tokens[i]) is not null then add
@@ -46,7 +46,7 @@ public class lexical_analyzer {
         // print the tokens
         for (int i = 0; i < tmp_array.length; i++) {
             System.out.print(tmp_array[i] + " ");
-            //if tmp_array is null, trim the array from the first null to end
+            // if tmp_array is null, trim the array from the first null to end
             if (tmp_array[i] == null) {
                 String[] new_array = new String[i];
                 for (int j = 0; j < i; j++) {
@@ -62,61 +62,125 @@ public class lexical_analyzer {
         tokens[i] = tokens[i];
         // add tokens[i] to tmp_a;
         tmp_array[i] = tokens[i];
-        System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]) + " " 
-            + tmp_array[i]);
+        System.out.println(tokens[i] + "\t" + getTokenType(tokens[i]) + " "
+                + tmp_array[i]);
     }
 
     private static void getTokenEqualNull(String[] tokens, String[] tmp_array, int i) {
         String temp_str = tokens[i];
         String tmp_strs = "";
+        String tmp_id = "";
         // scan the temp_str from the first character to the last character
         for (int j = 0; j < temp_str.length(); j++) {
             tmp_strs = temp_str.substring(j, j + 1);
-            // if tmps_strs is alpha or digit then add the character to tmp_strs
-            // if (tmp_strs.matches("[a-zA-Z0-9]")) {
-            //     // iterate tmp_stars until index is not alpha or digit
-            //     while (tmp_strs.matches("[a-zA-Z0-9]")) {
-            //         tmp_strs += temp_str.substring(j, j + 1);
-            //         j++;
-            //         System.out.println(tmp_strs + "\tgh" + getTokenType(tmp_strs));
-            //     }
-            // }
+            // print tmp_strs
+            System.out.println(tmp_strs + "\t1?" + getTokenType(tmp_strs));
+            // if tmps_strs is alpha or digit then check until index value of tmps_strs is
+            // alpha or digit
+
             // print tmp_strs
             System.out.println(tmp_strs + "\t1111" + getTokenType(tmp_strs));
             // if tmp_strs is = "+" or "-" or "&" or "|" or "=" or ">" or "<" or
-            // "!" or "*" or "/" or "%" then check the next index if it is 
+            // "!" or "*" or "/" or "%" then check the next index if it is
             // the same character mention above then add the two characters to
             // tmp_strs
             if (tmp_strs.equals("+") || tmp_strs.equals("-") || tmp_strs.equals("&")
-                || tmp_strs.equals("|") || tmp_strs.equals("=") || tmp_strs.equals(">")
-                || tmp_strs.equals("<") || tmp_strs.equals("!") || tmp_strs.equals("*")
-                || tmp_strs.equals("/") || tmp_strs.equals("%")) {
-                    tmp_strs = temp_str.substring(j, j + 2);
-                    System.out.println(tmp_strs + "\t1" + getTokenType(tmp_strs));
-                    // if tmp_strs is "++" or "--" or "&&" or "||" or "==" or "!=" or
-                    // ">=" or "<=" or "!=" or "*=" or "/=" or "%=" then add the two characters
-                    // to tmp_strs
-                    if (tmp_strs.equals("++") || tmp_strs.equals("--") || tmp_strs.equals("&&")
+                    || tmp_strs.equals("|") || tmp_strs.equals("=") || tmp_strs.equals(">")
+                    || tmp_strs.equals("<") || tmp_strs.equals("!") || tmp_strs.equals("*")
+                    || tmp_strs.equals("/") || tmp_strs.equals("%")) {
+                tmp_strs = temp_str.substring(j, j + 2);
+                System.out.println(tmp_strs + "\t1" + getTokenType(tmp_strs));
+                // if tmp_strs is "++" or "--" or "&&" or "||" or "==" or "!=" or
+                // ">=" or "<=" or "!=" or "*=" or "/=" or "%=" then add the two characters
+                // to tmp_strs
+                if (tmp_strs.equals("++") || tmp_strs.equals("--") || tmp_strs.equals("&&")
                         || tmp_strs.equals("||") || tmp_strs.equals("==") || tmp_strs.equals("!=")
                         || tmp_strs.equals(">=") || tmp_strs.equals("<=") || tmp_strs.equals("!=")
-                        || tmp_strs.equals("*=") || tmp_strs.equals("/=") || tmp_strs.equals("%=")) {
-                        tmp_strs = temp_str.substring(j, j + 2);
-                        System.out.println(tmp_strs + "\t2" + getTokenType(tmp_strs));
-                        j++;
-                    }
-                    // if tmp_strs is null
-                    else if ((getTokenType(tmp_strs) == null)) {
-                        tmp_strs = temp_str.substring(j, j + 1);
-                    }
+                        || tmp_strs.equals("*=") || tmp_strs.equals("/=") || tmp_strs.equals("%=")
+                        || tmp_strs.equals("+=")) {
+                    tmp_strs = temp_str.substring(j, j + 2);
+                    System.out.println(tmp_strs + "\t2" + getTokenType(tmp_strs));
+                    j++;
+                }
+                // if tmp_strs is null
+                else if ((getTokenType(tmp_strs) == null)) {
+                    tmp_strs = temp_str.substring(j, j + 1);
+                }
             }
             System.out.println(tmp_strs + "\t" + getTokenType(tmp_strs));
             // while tmp_array is not null, increment the index value of tmp_array
-            while(tmp_array[i] != null) {
+            while (tmp_array[i] != null) {
                 i++;
             }
             // add the tmp_strs to tmp_array
             tmp_array[i] = tmp_strs;
         }
+    }
+
+    public static String[] final_tokens(String[] tokens) {
+        String[] final_tokens = new String[tokens.length];
+        String finals = "";
+        int j = 0;
+        // print the tokens
+        for (int i = 0; i < tokens.length; i++) {
+            // check if the index is "Identifier" from getTokenType
+            if (getTokenType(tokens[i]) == "Identifier") {
+                // check until the index is not "Identifier" or "Constant"
+                while (getTokenType(tokens[i]) == "Identifier" ||
+                        getTokenType(tokens[i]) == "Constant") {
+                    finals = tokens[i] + finals;
+                    i++;
+                }
+                // reverse the string
+                finals = new StringBuffer(finals).reverse().toString();
+                // increment idx if final_tokens[idx] is not null
+                while (final_tokens[j] != null) {
+                    j++;
+                }
+
+                // add it to final_tokens
+                final_tokens[j] = finals;
+                finals = "";
+                // print the final string
+                System.out.println(final_tokens[j] + "\tjh" + getTokenType(final_tokens[j]));
+            }
+            if (getTokenType(tokens[i]) == "Constant") {
+                // check until the index is not "Identifier" or "Constant"
+                while (getTokenType(tokens[i]) == "Constant") {
+                    finals = tokens[i] + finals;
+                    i++;
+                }
+                // reverse the string
+                finals = new StringBuffer(finals).reverse().toString();
+                while (final_tokens[j] != null) {
+                    j++;
+                }
+                // add it to final_tokens
+                final_tokens[j] = finals;
+                finals = "";
+                // print the final string
+                System.out.println(final_tokens[j] + "\t-->" + getTokenType(final_tokens[j]));
+            }
+            while (final_tokens[j] != null) {
+                j++;
+            }
+            // add tokens[i] to final_tokens
+            final_tokens[j] = tokens[i];
+            // print the final string
+            System.out.println(final_tokens[j] + "\tjaa" + getTokenType(final_tokens[j]));
+        }
+        // iterate final_tokens
+        for (int i = 0; i < final_tokens.length; i++) {
+            // if final_tokens is null then trim it
+            if (final_tokens[i] == null) {
+                String[] new_array = new String[i];
+                for (int k = 0; k < i; k++) {
+                    new_array[k] = final_tokens[k];
+                }
+                return new_array;
+            }
+        }
+        return final_tokens;
     }
 
     // getTokenType

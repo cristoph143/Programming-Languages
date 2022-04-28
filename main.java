@@ -15,6 +15,13 @@ public class main {
             for (int i = 0; i < tokens.length; i++) {
                 System.out.println(tokens[i] + "\t" + lexical_analyzer.getTokenType(tokens[i]));
             }
+            // call final_tokens
+            String[] final_tokens = lexical_analyzer.final_tokens(tokens);
+            // print the final_tokens
+            System.out.println("\nFinal Token\tType");
+            for (int i = 0; i < final_tokens.length; i++) {
+                System.out.println(final_tokens[i] + "\t" + lexical_analyzer.getTokenType(final_tokens[i]));
+            }
             // call syntax_analyzer and store the results to a variable
             String[] syntax = syntax_analyzer.syntax_analyzer(tokens);
             // print the syntax
