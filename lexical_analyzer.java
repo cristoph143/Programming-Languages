@@ -205,6 +205,8 @@ public class lexical_analyzer {
                 || token.equals("<") || token.equals(">") || token.equals("<=")
                 || token.equals(">=")) {
             return "Comparison_op";
+        } else if (token.equals("\"") || token.equals("'")) {
+            return "Quotation Mark";
         } else if (token.equals("&&") || token.equals("||")
                 || token.equals("!")) {
             return "Logical_op";

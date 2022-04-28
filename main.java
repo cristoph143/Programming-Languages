@@ -23,7 +23,7 @@ public class main {
                 System.out.println(final_tokens[i] + "\t" + lexical_analyzer.getTokenType(final_tokens[i]));
             }
             // call syntax_analyzer and store the results to a variable
-            String[] syntax = syntax_analyzer.syntax_analyzer(tokens);
+            String[] syntax = syntax_analyzer.syntax_analyzer(final_tokens);
             // print the syntax
             System.out.println("\nSyntax\tType");
             for (int i = 0; i < syntax.length; i++) {
