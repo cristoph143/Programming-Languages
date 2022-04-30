@@ -20,7 +20,7 @@ import java.util.Scanner;
     =	    Equals_op
     1	    Constant
     ;	    Terminator
-    Problems Encountered:
+    Problems Encountered: Solved
     1. The space between characters is subtle since some keywords are joined with other keyword. Example "a++;" or "a;"
 */
 
@@ -73,17 +73,9 @@ public class lexical_analyzer {
         // scan the temp_str from the first character to the last character
         for (int j = 0; j < temp_str.length(); j++) {
             tmp_strs = temp_str.substring(j, j + 1);
-            // print tmp_strs
-            System.out.println(tmp_strs + "\t1?" + getTokenType(tmp_strs));
-            // if tmps_strs is alpha or digit then check until index value of tmps_strs is
-            // alpha or digit
-
-            // print tmp_strs
-            System.out.println(tmp_strs + "\t1111" + getTokenType(tmp_strs));
             // if tmp_strs is = "+" or "-" or "&" or "|" or "=" or ">" or "<" or
             // "!" or "*" or "/" or "%" then check the next index if it is
-            // the same character mention above then add the two characters to
-            // tmp_strs
+            // the same character or the character is a companion of the first one
             if (tmp_strs.equals("+") || tmp_strs.equals("-") || tmp_strs.equals("&")
                     || tmp_strs.equals("|") || tmp_strs.equals("=") || tmp_strs.equals(">")
                     || tmp_strs.equals("<") || tmp_strs.equals("!") || tmp_strs.equals("*")
@@ -187,7 +179,7 @@ public class lexical_analyzer {
     public static String getTokenType(String token) {
         if (token.equals("int") || token.equals("float") || token.equals("double")
                 || token.equals("char") || token.equals("boolean") || token.equals("byte")
-                || token.equals("short") || token.equals("long")) {
+                || token.equals("short") || token.equals("long") || token.equals("String")) {
             return "Data Type";
         } else if (token.equals("=")) {
             return "Equals_op";
