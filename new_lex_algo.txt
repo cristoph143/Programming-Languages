@@ -1,0 +1,55 @@
+input the code line
+repeat until the last token:
+	if token[i] is not null:
+		add it to tmp_arr
+	else send token[i] to a function Null:
+		store the tokens[i] into temp_string
+		iterate the temp_string until length is 0:
+			get the first token
+			if tmp_strs is = "+" or "-" or "&" or "|" or "=" or 
+			">" or "<" or "!" or "*" or "/" or "%" then: 
+				check the next index if it is the same character 
+				or the character is a companion of the first one
+				if tmp_strs is "++" or "--" or "&&" or "||" or "==" or "!=" 
+				or ">=" or "<=" or "!=" or "*=" or "/=" or "%=" then:
+					add the two characters to tmp_strs
+				else if the getToken(tmp_strs) is null:
+					get the first character only
+			else: // default 
+				iterate the tmp_arr until index is null:
+					increment
+				add the tmp_strs to the last index of tmp_arr that is null
+send to final_tokens:
+	declare final string:
+	iterate the token[i]:
+		if getToken(tokens) is identifier:
+			repeat until it is not identifier or constant:
+				add it to final string
+				increment i
+			reverse the final string
+			iterate the tmp_arr until index is null:
+					increment j
+			add the finals to the last index of final_tokens[j] that is null
+			reset finals = ""
+		if getToken(tokens) is constant:
+			repeat until it is not constant:
+				add it to final string
+				increment i
+			reverse the final string
+			iterate the tmp_arr until index is null:
+					increment j
+			add the finals to the last index of final_tokens[j] that is null
+			reset finals = "" 
+		else: //default
+			iterate the tmp_arr until index is null:
+					increment j
+			add the tokens[i] to the last index of final_tokens[j] that is null
+	iterate the final_tokens:
+		if final tokens is null:
+			initialize the new string[] with the last index get.
+				iterate until k < i:
+					store the final_tokens[k] to the new[arry] 
+				return the new arr
+print the tokens with respect to their tokentype
+end
+

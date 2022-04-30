@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class main {
     public static void main(String[] args){
         try (
-                Scanner scan = new Scanner(System.in);) {
+            Scanner scan = new Scanner(System.in);) {
             String lexemes = new String();
             // input the source code
             System.out.println("Enter the source code: ");

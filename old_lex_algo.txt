@@ -1,0 +1,23 @@
+input the code line
+repeat until the last token:
+	if token[i] is not null:
+		add it to tmp_arr
+	else send token[i] to a function Null:
+		send the token that is null from gettokentype
+				repeat until string is not null:
+					remove last char then read if the string is not null
+					return the longest string from the remove char from the received input
+				reverse the longest string then return as temp string
+		compare temp string to the original string then remove the part where temp string exist
+		add to tmp_arr
+		if temp_token is still null from getToken
+			repeat until getToken will return not null
+				send the token that is null from gettokentype
+				repeat until string is not null:
+					remove last char then read if the string is not null
+					return the longest string from the remove char from the received input
+				reverse the longest string then return as temp string
+			compare temp string to the original string then remove the part where temp string exist
+print the tokens with respect to their tokentype
+end
+
