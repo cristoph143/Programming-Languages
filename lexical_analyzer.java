@@ -180,7 +180,7 @@ public class lexical_analyzer {
         if (token.equals("int") || token.equals("float") || token.equals("double")
                 || token.equals("char") || token.equals("boolean") || token.equals("byte")
                 || token.equals("short") || token.equals("long") || token.equals("String")) {
-            return "Data Type";
+            return "Data_Type";
         } else if (token.equals("=")) {
             return "Equals_op";
         } else if (token.equals(";")) {
@@ -214,8 +214,6 @@ public class lexical_analyzer {
             return "Left_bracket";
         } else if (token.equals("]")) {
             return "Right_bracket";
-        } else if (token.equals(";")) {
-            return "Terminator";
         } else if (token.equals(".")) {
             return "Dot";
         } else if (token.equals(",")) {

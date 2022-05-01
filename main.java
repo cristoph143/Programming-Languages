@@ -30,7 +30,7 @@ public class main {
                 System.out.println(syntax[i] + "\t" + lexical_analyzer.getTokenType(syntax[i]));
             }
         } catch (Exception e) {
-            System.out.println("Error");
+            System.out.println("Error: " + e);
         }
     }
 }
