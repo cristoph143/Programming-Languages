@@ -34,6 +34,7 @@ public class syntax_analyzer{
             }
             System.out.println();
         }
+        System.out.println("\n");
         parseTree(tokens);
         return tokens;
     }
@@ -61,6 +62,60 @@ public class syntax_analyzer{
     public static void parseTree(String[] tokens) {
         // iterate tokens
         String[] parse_gram = new String[tokens.length];
+        // get the first index of GrammarString and print it
+        String line = GrammarString.get(0);
+        String []tmp = new String[tokens.length];
+        // add line to index of tmp
+        parse_gram[0] = line;
+        // print tmp
+        System.out.println(parse_gram[0]);
+        int index = 0;
+        // split table_list[0][1]
+        String[] temp = table_list[0][1].split(" ");
+        System.out.println(table_list[1][0] + "<--\t-->" + table_list[1][1]);
+        // Data_Type
+        // check if temp[0] == table_list[i][0]
+        if (temp[0].equals(table_list[1][0])) {
+            // check if the table_list[i][1] has values in tokens[1]
+            if (table_list[1][1].contains(tokens[index])) {
+                // if it has values, then add it to parse_gram
+                parse_gram[index+1] = "var_dec: "+tokens[index]+" dec;";
+                // print the parse_gram
+                System.out.println(parse_gram[index]);
+            }
+        }
+        // Dec
+        // check if temp[0] == table_list[2][0]
+        if (temp[1].equals(table_list[2][0])) {
+            // check if getTokenType(tokens[1]) is identifier
+            if (lexical_analyzer.getTokenType(tokens[index+1]).equals("Identifier")) {
+                // split table_list[2][1] by "\s\\|\s"
+                String[] temp2 = table_list[2][1].split("\\s\\|\\s");
+                // check if getTokenType(tokens[2]) is Equals_op
+                if (lexical_analyzer.getTokenType(tokens[index+2]).equals("Equals_op")) {
+                    // print temp2
+                    System.out.println(temp2[0] + " temp2");
+                    parse_gram[index+2] = "var_dec: "+tokens[index]+" "+temp2[0]+" ;";
+                    // split the temp2[0] by " "
+                    String[] temp3 = temp2[0].split(" ");
+                    
+                }
+                // check if getTokenType(tokens[2]) is "Comma"
+                if (lexical_analyzer.getTokenType(tokens[index+2]).equals("Comma")) {
+                    // print temp2
+                    System.out.println(temp2[1]);
+                    parse_gram[index+2] = "var_dec: "+tokens[index]+" "+temp2[1]+" ;";
+                }
+            }
+        }
+
+
+        // iterate parse_gram
+        for (int i = 0; i < parse_gram.length; i++) {
+            // print the parse_gram
+            System.out.println(parse_gram[i] + "\tdd");
+        }
+        // }
     }
     
     // print parse tree
@@ -139,6 +194,21 @@ public class syntax_analyzer{
                 // if the the token[i] is "(" heck if ")" exist
                 // if the the token[i] is "\"" heck if "\"" exist
                 // if the the token[i] is "\'" heck if "\'" exist
+            }
+            // if getTokenType(tokens[i]) is "Operator"
+            if (lexical_analyzer.getTokenType(tokens[i]).equals("Operator")) {
+                // check if the previous token is not identifier or constant
+                if (!lexical_analyzer.getTokenType(tokens[i-1]).equals("Identifier") 
+                    || lexical_analyzer.getTokenType(tokens[i-1]).equals("Constant")) {
+                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected before this token");
+                    return false;
+                }
+                // check if the next token is not identifier or constant
+                if (!lexical_analyzer.getTokenType(tokens[i+1]).equals("Identifier") 
+                    || lexical_analyzer.getTokenType(tokens[i+1]).equals("Constant")) {
+                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected after this token");
+                    return false;
+                }
             }
         }
         return true;
