@@ -1,5 +1,5 @@
 var_dec:data_type dec ;
 data_type:boolean | float | int | String | byte | long | short
 dec:identifier [=exp] | identifier, dec
-exp:exp(+|*|/|-)exp | '('exp')' | a-z-A-Z [exp] | 0 - 9 [exp] | " exp " | ' exp ' | exp . exp
+exp:(+|*|/|-)exp | '('exp')' | a-z-A-Z [exp] | 0 - 9 [exp] | " exp " | ' exp ' | . exp
 identifier:(a-z-A-Z)[a-z-A-Z-0-9_]
