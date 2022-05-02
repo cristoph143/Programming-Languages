@@ -24,7 +24,8 @@ public class syntax_analyzer{
         if (check_grammar(tokens) == false) {
             return tokens;
         }
-        
+        parseTree(tokens);
+
         // int 8 = ( ;
         // print the table
         System.out.println("\nTable");
@@ -60,96 +61,46 @@ public class syntax_analyzer{
 
     // parseTree
     public static void parseTree(String[] tokens) {
-        // iterate tokens
-        String[] parse_gram = new String[20];; 
-        // get the first index of GrammarString and print it
-        String line = GrammarString.get(0);
-        String []tmp = new String[tokens.length];
-        // add line to index of tmp
-        parse_gram[0] = line;
-        // print tmp
-        System.out.println(parse_gram[0]);
-        int index = 0;
-        // split table_list[0][1]
-        String[] temp = table_list[0][1].split(" ");
-        System.out.println(table_list[1][0] + "<--\t-->" + table_list[1][1]);
-        // Data_Type
-        // check if temp[0] == table_list[i][0]
-        if (temp[0].equals(table_list[1][0])) {
-            // check if the table_list[i][1] has values in tokens[1]
-            if (table_list[1][1].contains(tokens[index])) {
-                // if it has values, then add it to parse_gram
-                parse_gram[index+1] = "var_dec: "+tokens[index]+" dec;";
-                // print the parse_gram
-                System.out.println(parse_gram[index]);
-            }
-        }
-        // Dec
-        dec_loop(tokens, parse_gram, index, temp);
-        // if parse_gram[4] contains ", dec"
-        if (parse_gram[4].contains(", dec")) {
-            index = 3;
-            dec_loop(tokens, parse_gram, index, temp);
-        }
-        // if parse_gram[4] contains "[=exp]"
-        if (parse_gram[4].contains("[=exp]")) {
-            // print table_list[3][1]
-            System.out.println(table_list[3][0] + "<--=\t=-->" + table_list[3][1]);
-            // check if the table_list[i][1] has values in tokens[1]
-            if (table_list[1][1].contains(tokens[index])) {
-                // split table_list[2][1] by "\s\\|\s"
-                String[] temp2 = table_list[3][1].split("\\s\\|\\s");
-                // if remaining tokens has + or - or * or /
-            }
-        }
-        // iterate parse_gram
-        for (int i = 0; i < parse_gram.length; i++) {
-            // print the parse_gram
-            System.out.println(parse_gram[i] + "\tdd");
+        String[] var_dec = table_list[0][1].split("\s");
+        String[] data_type = split_by_or(1, "Data_type");
+        String[] dec = split_by_or(2, "Dec");
+        String[] exp = split_by_or(3, "Exp");
+        // split GrammarString[0] by ":"
+        String[] temp = GrammarString.get(0).split(":");
+        String[] temp2 = temp[1].split("\s");
+        // print temp
+        System.out.println("\n" + temp[0] + " ::= " + temp[1]);
+        // if tokens[0] is in data_type
+        if (check_in_list(tokens[0], data_type)) {
+            System.out.println(temp[0] + " ::= " + tokens[0] + " " + var_dec[1] + " " + var_dec[2]);
         }
     }
 
-    private static void dec_loop(String[] tokens, String[] parse_gram, int index, String[] temp) {
-        int tok_id=0;
-        // check if temp[0] == table_list[2][0]
-        if (temp[1].equals(table_list[2][0])) {
-            // check if getTokenType(tokens[1]) is identifier
-            if (lexical_analyzer.getTokenType(tokens[tok_id+1]).equals("Identifier")) {
-                // split table_list[2][1] by "\s\\|\s"
-                String[] temp2 = table_list[2][1].split("\\s\\|\\s");
-                // check if getTokenType(tokens[2]) is Equals_op
-                if (lexical_analyzer.getTokenType(tokens[tok_id+2]).equals("Equals_op")) {
-                    // print temp2
-                    System.out.println(temp2[0] + " temp2");
-                    parse_gram[index+2] = "var_dec: "+tokens[tok_id]+" "+temp2[0]+" ;";
-                    // split the temp2[0] by " "
-                    String[] temp3 = temp2[0].split(" ");
-                    
-                    System.out.println(table_list[4][1] + " temp-");
-                    parse_gram[index+3] = "var_dec: "+tokens[tok_id]+" "+table_list[4][1]+" ;";
-                    parse_gram[index+4] = "var_dec: "+tokens[tok_id]+" "+tokens[1]+ " "+ temp3[1]+" ;";
-                }
-                // check if getTokenType(tokens[2]) is "Comma"
-                if (lexical_analyzer.getTokenType(tokens[tok_id+2]).equals("Comma")) {
-                    // print temp2
-                    System.out.println(temp2[1]);
-                    parse_gram[index+2] = "var_dec: "+tokens[tok_id]+" "+temp2[1]+" ;";
-                    // split the temp2[0] by " "
-                    String[] temp3 = temp2[1].split(" ");
-                    
-                    System.out.println(table_list[4][1] + " temp-");
-                    parse_gram[index+3] = "var_dec: "+tokens[tok_id]+" "+table_list[4][1]+" "+temp2[1]+" ;";
-                    parse_gram[index+4] = "var_dec: "+tokens[tok_id]+" "+tokens[1]+ ", "+ temp3[1]+" ;";
-                }
+    private static boolean check_in_list(String string, String[] data_type) {
+        for (int i = 0; i < data_type.length; i++) {
+            if (string.equals(data_type[i])) {
+                return true;
             }
         }
+        return false;
     }
-    
 
-    // print parse tree
-    public static void print_parse_tree(String[] tokens) {
+    public static String[] split_by_or(int inx, String str){
+        System.out.println(table_list[inx][1]+"\n");
+        // split table_list[1][1] by " | "
+        String[] temp = table_list[inx][1].split("\s\\|\s");
+        // print the temp
+        System.out.println("\n"+ str);
+        for (int i = 0; i < temp.length; i++) {
+            System.out.println(temp[i] + "\t" + lexical_analyzer.getTokenType(temp[i]));
+        }
+        return temp;
+    }
 
-
+    // choose the right grammar rule
+    public static void grammar_choice(String[] tokens) {
+        
+        // return true;
     }
 
     // check if the parse tree is valid grammar
