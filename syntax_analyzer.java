@@ -86,6 +86,11 @@ public class syntax_analyzer{
         }
         // Dec
         dec_loop(tokens, parse_gram, index, temp);
+        // if parse_gram[4] contains ", dec"
+        if (parse_gram[4].contains(", dec")) {
+            index = 3;
+            dec_loop(tokens, parse_gram, index, temp);
+        }
         // if parse_gram[4] contains "[=exp]"
         if (parse_gram[4].contains("[=exp]")) {
             // print table_list[3][1]
@@ -105,40 +110,42 @@ public class syntax_analyzer{
     }
 
     private static void dec_loop(String[] tokens, String[] parse_gram, int index, String[] temp) {
+        int tok_id=0;
         // check if temp[0] == table_list[2][0]
         if (temp[1].equals(table_list[2][0])) {
             // check if getTokenType(tokens[1]) is identifier
-            if (lexical_analyzer.getTokenType(tokens[index+1]).equals("Identifier")) {
+            if (lexical_analyzer.getTokenType(tokens[tok_id+1]).equals("Identifier")) {
                 // split table_list[2][1] by "\s\\|\s"
                 String[] temp2 = table_list[2][1].split("\\s\\|\\s");
                 // check if getTokenType(tokens[2]) is Equals_op
-                if (lexical_analyzer.getTokenType(tokens[index+2]).equals("Equals_op")) {
+                if (lexical_analyzer.getTokenType(tokens[tok_id+2]).equals("Equals_op")) {
                     // print temp2
                     System.out.println(temp2[0] + " temp2");
-                    parse_gram[index+2] = "var_dec: "+tokens[index]+" "+temp2[0]+" ;";
+                    parse_gram[index+2] = "var_dec: "+tokens[tok_id]+" "+temp2[0]+" ;";
                     // split the temp2[0] by " "
                     String[] temp3 = temp2[0].split(" ");
                     
                     System.out.println(table_list[4][1] + " temp-");
-                    parse_gram[index+3] = "var_dec: "+tokens[index]+" "+table_list[4][1]+" ;";
-                    parse_gram[index+4] = "var_dec: "+tokens[index]+" "+tokens[1]+ " "+ temp3[1]+" ;";
+                    parse_gram[index+3] = "var_dec: "+tokens[tok_id]+" "+table_list[4][1]+" ;";
+                    parse_gram[index+4] = "var_dec: "+tokens[tok_id]+" "+tokens[1]+ " "+ temp3[1]+" ;";
                 }
                 // check if getTokenType(tokens[2]) is "Comma"
-                if (lexical_analyzer.getTokenType(tokens[index+2]).equals("Comma")) {
+                if (lexical_analyzer.getTokenType(tokens[tok_id+2]).equals("Comma")) {
                     // print temp2
                     System.out.println(temp2[1]);
-                    parse_gram[index+2] = "var_dec: "+tokens[index]+" "+temp2[1]+" ;";
+                    parse_gram[index+2] = "var_dec: "+tokens[tok_id]+" "+temp2[1]+" ;";
                     // split the temp2[0] by " "
                     String[] temp3 = temp2[1].split(" ");
                     
                     System.out.println(table_list[4][1] + " temp-");
-                    parse_gram[index+3] = "var_dec: "+tokens[index]+" "+table_list[4][1]+" ;";
-                    parse_gram[index+4] = "var_dec: "+tokens[index]+" "+tokens[1]+ ", "+ temp3[1]+" ;";
+                    parse_gram[index+3] = "var_dec: "+tokens[tok_id]+" "+table_list[4][1]+" "+temp2[1]+" ;";
+                    parse_gram[index+4] = "var_dec: "+tokens[tok_id]+" "+tokens[1]+ ", "+ temp3[1]+" ;";
                 }
             }
         }
     }
     
+
     // print parse tree
     public static void print_parse_tree(String[] tokens) {
 
