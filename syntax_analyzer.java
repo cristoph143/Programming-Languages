@@ -61,7 +61,7 @@ public class syntax_analyzer{
     // parseTree
     public static void parseTree(String[] tokens) {
         // iterate tokens
-        String[] parse_gram = new String[tokens.length];
+        String[] parse_gram = new String[20];; 
         // get the first index of GrammarString and print it
         String line = GrammarString.get(0);
         String []tmp = new String[tokens.length];
@@ -85,6 +85,26 @@ public class syntax_analyzer{
             }
         }
         // Dec
+        dec_loop(tokens, parse_gram, index, temp);
+        // if parse_gram[4] contains "[=exp]"
+        if (parse_gram[4].contains("[=exp]")) {
+            // print table_list[3][1]
+            System.out.println(table_list[3][0] + "<--=\t=-->" + table_list[3][1]);
+            // check if the table_list[i][1] has values in tokens[1]
+            if (table_list[1][1].contains(tokens[index])) {
+                // split table_list[2][1] by "\s\\|\s"
+                String[] temp2 = table_list[3][1].split("\\s\\|\\s");
+                // if remaining tokens has + or - or * or /
+            }
+        }
+        // iterate parse_gram
+        for (int i = 0; i < parse_gram.length; i++) {
+            // print the parse_gram
+            System.out.println(parse_gram[i] + "\tdd");
+        }
+    }
+
+    private static void dec_loop(String[] tokens, String[] parse_gram, int index, String[] temp) {
         // check if temp[0] == table_list[2][0]
         if (temp[1].equals(table_list[2][0])) {
             // check if getTokenType(tokens[1]) is identifier
@@ -99,23 +119,24 @@ public class syntax_analyzer{
                     // split the temp2[0] by " "
                     String[] temp3 = temp2[0].split(" ");
                     
+                    System.out.println(table_list[4][1] + " temp-");
+                    parse_gram[index+3] = "var_dec: "+tokens[index]+" "+table_list[4][1]+" ;";
+                    parse_gram[index+4] = "var_dec: "+tokens[index]+" "+tokens[1]+ " "+ temp3[1]+" ;";
                 }
                 // check if getTokenType(tokens[2]) is "Comma"
                 if (lexical_analyzer.getTokenType(tokens[index+2]).equals("Comma")) {
                     // print temp2
                     System.out.println(temp2[1]);
                     parse_gram[index+2] = "var_dec: "+tokens[index]+" "+temp2[1]+" ;";
+                    // split the temp2[0] by " "
+                    String[] temp3 = temp2[1].split(" ");
+                    
+                    System.out.println(table_list[4][1] + " temp-");
+                    parse_gram[index+3] = "var_dec: "+tokens[index]+" "+table_list[4][1]+" ;";
+                    parse_gram[index+4] = "var_dec: "+tokens[index]+" "+tokens[1]+ ", "+ temp3[1]+" ;";
                 }
             }
         }
-
-
-        // iterate parse_gram
-        for (int i = 0; i < parse_gram.length; i++) {
-            // print the parse_gram
-            System.out.println(parse_gram[i] + "\tdd");
-        }
-        // }
     }
     
     // print parse tree
