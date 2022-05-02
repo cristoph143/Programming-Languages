@@ -24,7 +24,7 @@ public class syntax_analyzer{
         if (check_grammar(tokens) == false) {
             return tokens;
         }
-        parseTree(tokens);
+        parseTree(tokens,0);
 
         // int 8 = ( ;
         // print the table
@@ -36,7 +36,7 @@ public class syntax_analyzer{
             System.out.println();
         }
         System.out.println("\n");
-        parseTree(tokens);
+        parseTree(tokens,0);
         return tokens;
     }
 
@@ -58,22 +58,72 @@ public class syntax_analyzer{
             System.out.println("Error");
         }
     }
-
+    
     // parseTree
-    public static void parseTree(String[] tokens) {
+    public static void parseTree(String[] tokens, int idx) {
         String[] var_dec = table_list[0][1].split("\s");
         String[] data_type = split_by_or(1, "Data_type");
         String[] dec = split_by_or(2, "Dec");
+        String[] dec2 = dec[0].split(" ");
         String[] exp = split_by_or(3, "Exp");
+        String[] ops_exp = ops_exp();
         // split GrammarString[0] by ":"
         String[] temp = GrammarString.get(0).split(":");
         String[] temp2 = temp[1].split("\s");
+        String parse;
+        String[] parse_gram = new String[temp2.length];
         // print temp
-        System.out.println("\n" + temp[0] + " ::= " + temp[1]);
+        parse = temp[0] + " ::= " + temp[1];
+        parse_gram[0] = parse;
+        System.out.println("\n" + parse);
+        parse = "";
         // if tokens[0] is in data_type
         if (check_in_list(tokens[0], data_type)) {
-            System.out.println(temp[0] + " ::= " + tokens[0] + " " + var_dec[1] + " " + var_dec[2]);
+            parse = temp[0] + " ::= " + tokens[0] + " " + var_dec[1] + " " + var_dec[2];
+            parse_gram[1] = parse;
+            System.out.println(parse);
+            parse = "";
+            // if getTokenType(tokens[1]) == "Identifier"
+            if (lexical_analyzer.getTokenType(tokens[idx+1]) == "Identifier") {
+                if (lexical_analyzer.getTokenType(tokens[idx+2]) == "Operator" || 
+                    lexical_analyzer.getTokenType(tokens[idx+2]) == "Equals_op") {
+                    System.out.println(temp[0] + " ::= " + tokens[idx] + " " + dec[0] + " " + var_dec[2]);
+                    // if getTokenType(tokens[2]) == "Operator"
+                    if (lexical_analyzer.getTokenType(tokens[idx+2]) == "Operator") {
+                        operator_parsing(tokens);
+                    }
+                }
+                // if getTokenType(tokens[2]) == "Comma"
+                if (lexical_analyzer.getTokenType(tokens[2]) == "Comma") {
+                    System.out.println(temp[0] + " ::= " + tokens[idx] + " " + tokens[idx+1] + " " + tokens[idx+2] + " " + var_dec[1] + " " + var_dec[2]);
+                }
+            }
         }
+        // iterate parse_gram
+        for (int i = 0; i < parse_gram.length; i++) {
+            if (parse_gram[i] != null) {
+                System.out.println(parse_gram[i] + "kkk");
+            }
+        }
+    }
+
+    private static void operator_parsing(String[] tokens) {
+        // get the previous token until the last-1 token
+        String[] temp_tokens = new String[tokens.length-1];
+        for (int i = 1; i < tokens.length-1; i++) {
+            temp_tokens[i] = tokens[i];
+            // print temp_tokens
+            System.out.print(temp_tokens[i] + " ");
+        }
+        System.out.println();
+    }
+
+    // use ast parse tree for parsing operation
+
+
+    public static String[] ops_exp(){
+        String[] temp = table_list[3][1].split("\s");
+        return temp;
     }
 
     private static boolean check_in_list(String string, String[] data_type) {
@@ -102,6 +152,7 @@ public class syntax_analyzer{
         
         // return true;
     }
+
 
     // check if the parse tree is valid grammar
     public static boolean check_grammar(String[] tokens) {
