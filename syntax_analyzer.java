@@ -13,15 +13,19 @@ public class syntax_analyzer {
         String[] data_type = { "boolean", "float", "int", "String", "byte", "long", "short" };
         // add the tokens[1] to the node if it exist in data_type[i]
         String tmp = "";
-        if (tokens.length == 1)
-            data_types(tokens, idx, data_type);      
-            isTerminator(tokens, idx);
+        // if (tokens.length == 1)
+        //     data_types(tokens, idx, data_type);      
+        //     isTerminator(tokens, tokens.length-1);
+        System.out.println("-----------------------------------------------------"); 
         data_types(tokens, idx, data_type);
+        System.out.println("-----------------------------------------------------"); 
         tmp = forming_identifier(tokens, idx, tmp);
         System.out.println(tmp+"sss");
         // identifier(tokens, idx);
+        System.out.println("-----------------------------------------------------"); 
         isTerminator(tokens, tokens.length-1);
         tmp = identifier(tokens, idx);
+        System.out.println("-----------------------------------------------------"); 
         idx += tmp.length();
         // int op=(op+);
         System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
@@ -212,8 +216,11 @@ public class syntax_analyzer {
             // else throw error
             else if (i == data_type.length - 1) {
                 String tmp = forming_identifier(tokens, 0, tokens[0]);
-                System.out.println("Error: " + tmp + " is not a valid data type");
-                System.exit(0);
+                // check if tmp is a data_type
+                if (lexical_analyzer.getTokenType(tmp) == "Data_type") {
+                    System.out.println("Error: " + tmp + " is not a data_type");
+                    System.exit(0);
+                }
             }
         }
     }
