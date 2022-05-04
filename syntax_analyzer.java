@@ -13,7 +13,8 @@ public class syntax_analyzer {
         String[] data_type = { "boolean", "float", "int", "String", "byte", "long", "short" };
         // add the tokens[1] to the node if it exist in data_type[i]
         String tmp = "";
-        if (tokens.length == 1)      
+        if (tokens.length == 1)
+            data_types(tokens, idx, data_type);      
             isTerminator(tokens, idx);
         data_types(tokens, idx, data_type);
         tmp = forming_identifier(tokens, idx, tmp);
@@ -187,8 +188,8 @@ public class syntax_analyzer {
     }
 
     private static String forming_identifier(String[] tokens, int idx, String tmp) {
-        System.out.println(tmp+" --> idx --> "+ idx);
-        for (int i = 2; i < tokens.length;) {
+        System.out.println(tmp+" --> idx --> "+ idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+        for (int i = 1; i < tokens.length;) {
             if (lexical_analyzer.getTokenType(tokens[i]) == "Identifier"
                     || lexical_analyzer.getTokenType(tokens[i]) == "Constant") {
                 System.out.println("i: " + i + " tokens: " + tokens[i] + " tmp: " + tmp);
@@ -210,7 +211,8 @@ public class syntax_analyzer {
             }
             // else throw error
             else if (i == data_type.length - 1) {
-                System.out.println("Error: " + tokens[idx] + " is not a valid data type");
+                String tmp = forming_identifier(tokens, 0, tokens[0]);
+                System.out.println("Error: " + tmp + " is not a valid data type");
                 System.exit(0);
             }
         }
