@@ -1,246 +1,196 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Map.Entry;
 
-public class syntax_analyzer{
+import org.json.simple.JSONObject;
+
+public class syntax_analyzer {
     static List<String> GrammarString = new ArrayList<String>();
-    static String[] header_list = {"var_dec", "data_type", "dec", "exp", "identifier"};
+    static String[] header_list = { "var_dec", "data_type", "dec", "exp", "identifier" };
     static String[][] table_list;
-    // TODO:
-    // 1. Add the grammar rules to the GrammarString
-    // 2. create a parse tree
-    // 3. print the parse tree in a tree format with indentation
-    // 4. check the parse tree if it is valid grammar from GrammarString
-    // return the syntax_analyzer
-    public static String[] syntax_analyzer(String[] tokens) {
-        read_grammar_file();
-        table_list = new String[GrammarString.size()][2];
-        for (int i = 0; i < GrammarString.size(); i++) {
-            String[] temp = GrammarString.get(i).split(":");
-            table_list[i][0] = temp[0];
-            table_list[i][1] = temp[1];
-        }
-        // if check_grammar(tokens) == false, then return tokens
-        if (check_grammar(tokens) == false) {
-            return tokens;
-        }
-        parseTree(tokens,0);
 
-        // int 8 = ( ;
-        // print the table
-        System.out.println("\nTable");
-        for (int i = 0; i < table_list.length; i++) {
-            for (int j = 0; j < table_list[i].length; j++) {
-                System.out.print(table_list[i][j] + "\t\t");
-            }
-            System.out.println();
-        }
-        System.out.println("\n");
-        parseTree(tokens,0);
+    static HashMap<String, String> map = new HashMap<String, String>();
+
+    public static String[] syntax_analyzer(String[] tokens) {
+        int idx = 0;
+        String[] data_type = { "boolean", "float", "int", "String", "byte", "long", "short" };
+        // add the tokens[1] to the node if it exist in data_type[i]
+        data_types(tokens, idx, data_type);
+        String tmp = identifier(tokens, idx);
+        idx += tmp.length();
+        // int op=(op+);
+        System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+        // get the substring of tokens from 0 to idx
+        String[] sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+        System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
+        dec(sub_tokens, 0, tmp);
         return tokens;
     }
 
-    // Read the grammar file and store each line as a List of Strings
-    public static void read_grammar_file() {
-        // read the grammar.txt file until eof 
-        try {
-            Scanner scan = new Scanner(new java.io.File("grammar.txt"));
-            while (scan.hasNextLine()) {
-                GrammarString.add(scan.nextLine());
-            }
-            // print the grammar
-            System.out.println("\nGrammar\tType");
-            for (int i = 0; i < GrammarString.size(); i++) {
-                System.out.println(GrammarString.get(i) + "\t" + lexical_analyzer.getTokenType(GrammarString.get(i)));
-            }
-            scan.close();
-        } catch (Exception e) {
-            System.out.println("Error");
+    private static void dec(String[] tokens, int idx, String tmp) {
+        String tmp2 = tmp;
+        String[] sub_tokens;
+        System.out.println(">idxjj: " + idx + " tokens: " + tokens[idx + 1] + " tmp: " + tmp);
+        if (lexical_analyzer.getTokenType(tokens[idx]) == "Equals_op") {
+            System.out.println(">idxx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+            exp(tokens, idx);
+        } else if (lexical_analyzer.getTokenType(tokens[idx]) == "Comma") {
+            System.out.println(">idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+            tmp = identifier(tokens, idx);
+            idx += tmp.length();
+            // int op=(op+);
+            System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+            // get the substring of tokens from 0 to idx
+            sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+            System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
+            dec(sub_tokens, 0, tmp);
+        } else if (lexical_analyzer.getTokenType(tokens[idx]) == "Terminator") {
+            System.out.println("Syntax Accepted");
         }
     }
-    
-    // parseTree
-    public static void parseTree(String[] tokens, int idx) {
-        String[] var_dec = table_list[0][1].split("\s");
-        String[] data_type = split_by_or(1, "Data_type");
-        String[] dec = split_by_or(2, "Dec");
-        String[] dec2 = dec[0].split(" ");
-        String[] exp = split_by_or(3, "Exp");
-        String[] ops_exp = ops_exp();
-        // split GrammarString[0] by ":"
-        String[] temp = GrammarString.get(0).split(":");
-        String[] temp2 = temp[1].split("\s");
-        String parse;
-        String[] parse_gram = new String[temp2.length];
-        // print temp
-        parse = temp[0] + " ::= " + temp[1];
-        parse_gram[0] = parse;
-        System.out.println("\n" + parse);
-        parse = "";
-        // if tokens[0] is in data_type
-        if (check_in_list(tokens[0], data_type)) {
-            parse = temp[0] + " ::= " + tokens[0] + " " + var_dec[1] + " " + var_dec[2];
-            parse_gram[1] = parse;
-            System.out.println(parse);
-            parse = "";
-            // if getTokenType(tokens[1]) == "Identifier"
-            if (lexical_analyzer.getTokenType(tokens[idx+1]) == "Identifier") {
-                if (lexical_analyzer.getTokenType(tokens[idx+2]) == "Operator" || 
-                    lexical_analyzer.getTokenType(tokens[idx+2]) == "Equals_op") {
-                    System.out.println(temp[0] + " ::= " + tokens[idx] + " " + dec[0] + " " + var_dec[2]);
-                    // if getTokenType(tokens[2]) == "Operator"
-                    if (lexical_analyzer.getTokenType(tokens[idx+2]) == "Operator") {
-                        operator_parsing(tokens);
+
+    private static void exp(String[] tokens, int idx) {
+        String tmp;
+        String[] sub_tokens;
+        if (tokens[idx + 1].equals("(")) {
+            exp_par(tokens, idx);
+        }
+        if (tokens[1].equals(")")) {
+            System.out.println("Syntax error on token \"" + tokens[idx + 1] + "\", invalid Expression");
+            System.exit(1);
+        }
+    }
+
+    private static void exp_par(String[] tokens, int idx) {
+        String tmp;
+        String[] sub_tokens;
+        // if next token is (
+
+        // get the substring of tokens from 0 to idx
+        sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+        System.out.println("sub_tokensassas: " + Arrays.toString(sub_tokens));
+        // append sub_tokens to tmp_str
+        String tmp_str = "";
+        // iterate over sub_tokens and append to tmp_str
+        for (int i = 0; i < sub_tokens.length; i++) {
+            tmp_str += sub_tokens[i];
+        }
+        System.out.println("tmp_str: " + tmp_str);
+        tmp = tokens[idx];
+        isBalancedPar(tmp_str);
+        // get the substring of tokens from 0 to idx
+        sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+        System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
+        System.out.println("idx:s " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+    }
+
+    public static void isBalancedPar(String str) {
+        int count = 0, idx = 0;
+        int first, second = 0;
+        int[] arr = new int[str.length()];
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '(') {
+                arr[i] = 0;
+                count++;
+            } else if (str.charAt(i) == ')') {
+                arr[i] = 1;
+                count--;
+            } else {
+                // check if str.charAt(i) is constant or identifier
+                if (isIdentifier_or_constant(str.charAt(i))) {
+                    arr[i] = 2;
+                } else {
+                    arr[i] = 3;
+                }
+            }
+        }
+        // print arr
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + " ");
+        }
+        for (int i = 0; i < arr.length; i++) {
+            // check if arr[i] is 0 or 1
+            if (arr[i] == 0 || arr[i] == 1) {
+                if (arr[i] == 0) {
+                    // check if next arr[i] is not 2 or 0
+                    System.out.println("sdsdsdsds");
+                    if (arr[i + 1] != 2 && arr[i + 1] != 0) {
+                        System.out.println("Syntax error on token sd\"" + str.charAt(i)
+                                + "\", identifier or constant or \"(\" after this token");
+                        System.exit(1);
                     }
                 }
-                // if getTokenType(tokens[2]) == "Comma"
-                if (lexical_analyzer.getTokenType(tokens[2]) == "Comma") {
-                    System.out.println(temp[0] + " ::= " + tokens[idx] + " " + tokens[idx+1] + " " + tokens[idx+2] + " " + var_dec[1] + " " + var_dec[2]);
+                if (arr[i] == 1) {
+                    // check if next arr[i] is not 2 or 0
+                    System.out.println("sdsdsdsds");
+                    if (arr[i - 1] != 2 && arr[i - 1] != 1) {
+                        System.out.println("Syntax error on token s\"" + str.charAt(i)
+                                + "\", identifier or constant or \")\" before this token");
+                        System.exit(1);
+                    }
                 }
             }
         }
-        // iterate parse_gram
-        for (int i = 0; i < parse_gram.length; i++) {
-            if (parse_gram[i] != null) {
-                System.out.println(parse_gram[i] + "kkk");
-            }
+        if (count != 0) {
+            System.out.println("Syntax error, insert \")\", to complete Expression");
+            System.exit(1);
         }
     }
 
-    private static void operator_parsing(String[] tokens) {
-        // get the previous token until the last-1 token
-        String[] temp_tokens = new String[tokens.length-1];
-        for (int i = 1; i < tokens.length-1; i++) {
-            temp_tokens[i] = tokens[i];
-            // print temp_tokens
-            System.out.print(temp_tokens[i] + " ");
-        }
-        System.out.println();
-    }
-
-    // use ast parse tree for parsing operation
-
-
-    public static String[] ops_exp(){
-        String[] temp = table_list[3][1].split("\s");
-        return temp;
-    }
-
-    private static boolean check_in_list(String string, String[] data_type) {
-        for (int i = 0; i < data_type.length; i++) {
-            if (string.equals(data_type[i])) {
-                return true;
-            }
+    public static boolean isIdentifier_or_constant(char c) {
+        if (Character.isLetter(c) || Character.isDigit(c)) {
+            return true;
         }
         return false;
     }
 
-    public static String[] split_by_or(int inx, String str){
-        System.out.println(table_list[inx][1]+"\n");
-        // split table_list[1][1] by " | "
-        String[] temp = table_list[inx][1].split("\s\\|\s");
-        // print the temp
-        System.out.println("\n"+ str);
-        for (int i = 0; i < temp.length; i++) {
-            System.out.println(temp[i] + "\t" + lexical_analyzer.getTokenType(temp[i]));
+    private static String identifier(String[] tokens, int idx) {
+        String tmp = "";
+        // check if getTokenType(tokens[1]) is "Identifier"
+        if (lexical_analyzer.getTokenType(tokens[1]) != "Identifier") {
+            System.out.println("Error: " + tokens[idx + 1] + " is not an identifier");
+            System.exit(0);
         }
+        tmp += tokens[idx + 1];
+        for (int i = 2; i < tokens.length;) {
+            if (lexical_analyzer.getTokenType(tokens[i]) == "Identifier"
+                    || lexical_analyzer.getTokenType(tokens[i]) == "Constant") {
+                System.out.println("i: " + i + " tokens: " + tokens[i] + " tmp: " + tmp);
+                tmp += tokens[i];
+                i++;
+            } else {
+                break;
+            }
+        }
+        System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+        return tmp;
+    }
+
+    private static void data_types(String[] tokens, int idx, String[] data_type) {
+        for (int i = 0; i < data_type.length; i++) {
+            if (tokens[idx].equals(data_type[i])) {
+                idx++;
+                break;
+            }
+            // else throw error
+            else if (i == data_type.length - 1) {
+                System.out.println("Error: " + tokens[idx] + " is not a valid data type");
+                System.exit(0);
+            }
+        }
+    }
+
+    /* ---------- Return the parse tree structure for the given grammar --------- */
+    public static String[] ops_exp() {
+        String[] temp = table_list[3][1].split("\s");
         return temp;
     }
 
-    // choose the right grammar rule
-    public static void grammar_choice(String[] tokens) {
-        
-        // return true;
-    }
-
-
-    // check if the parse tree is valid grammar
-    public static boolean check_grammar(String[] tokens) {
-        // print the first index of GrammarString
-        System.out.println(GrammarString.get(0));
-        // check if getTokenType(tokens[0]) is not "Data_Type"
-        if (!lexical_analyzer.getTokenType(tokens[0]).equals("Data_Type")) {
-            System.out.println("Syntax error, insert \"VariableDeclarators\" to complete LocalVariableDeclaration");
-            return false;
-        }
-        // if getTokenType(tokens[length-1]) is not "Terminator"
-        if (!lexical_analyzer.getTokenType(tokens[tokens.length-1]).equals("Terminator")) {
-            System.out.println("Syntax error, insert \";\" to complete LocalVariableDeclarationStatement");
-            return false;
-        }
-        // if getTokenType(tokens[2]) is  not "Identifier" and the getTokenType(tokens[3]) is "Equals_op"
-        if (!lexical_analyzer.getTokenType(tokens[2]).equals("Identifier") 
-            && lexical_analyzer.getTokenType(tokens[3]).equals("Equals_op")) {
-            System.out.println("Syntax error, insert \"Identifier\" to complete VariableDeclarator");
-            System.out.println("The left-hand side of an assignment must be a variable");
-            return false;
-        }
-        // check if tokens[i] is = "(" or "\"" or "\'"
-        for (int i = 0; i < tokens.length; i++) {
-            // if getTokenType(tokens[i]) is operator
-            if (tokens[i].equals("=")) {
-                // check if the previous token and the next token are not identifier or constant
-                if (!lexical_analyzer.getTokenType(tokens[i-1]).equals("Identifier") 
-                    || lexical_analyzer.getTokenType(tokens[i-1]).equals("Constant")) {
-                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected before this token");
-                    return false;
-                }
-                if(!lexical_analyzer.getTokenType(tokens[i+1]).equals("Identifier")
-                    && !lexical_analyzer.getTokenType(tokens[i+1]).equals("Constant")){
-                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected after this token");
-                    return false;
-                }
-            }
-            // if tokens[i] is ","
-            if (tokens[i].equals(",")) {
-                // check if the previous token is identifier
-                if (lexical_analyzer.getTokenType(tokens[i-1]).equals("Identifier")) {
-                    // check if the next token is not identifier
-                    if (!lexical_analyzer.getTokenType(tokens[i+1]).equals("Identifier")) {
-                        System.out.println("Syntax error on token \""+ tokens[i] +"\" , Identifier expected after this token");
-                        return false;
-                    }
-                }
-                // check if the previous token is constant
-                if (lexical_analyzer.getTokenType(tokens[i-1]).equals("Constant") ||
-                    !lexical_analyzer.getTokenType(tokens[i-1]).equals("Identifier")) {
-                    System.out.println("Syntax error on token \""+ tokens[i] +"\" , Identifier expected before this token");
-                    return false;
-                }
-            }
-            if (tokens[i].equals("(") || tokens[i].equals("\"") || tokens[i].equals("\'")) {
-                // if previous token is data_type
-                if (lexical_analyzer.getTokenType(tokens[i-1]).equals("Data_Type")) {
-                    System.out.println("Syntax error on token "+ tokens[i] +", AnnotationName expected after this token");
-                    return false;
-                }
-                // if the the token[i] is "(" and the next token is not identifier or constant
-                if (tokens[i].equals("(") && !lexical_analyzer.getTokenType(tokens[i+1]).equals("Identifier")
-                    && !lexical_analyzer.getTokenType(tokens[i+1]).equals("Constant")) {
-                    System.out.println("Syntax error on token \""+ tokens[i] +"\" , Identifier expected after this token");
-                    return false;
-                }
-                // FIXME: 
-                // if the the token[i] is "(" heck if ")" exist
-                // if the the token[i] is "\"" heck if "\"" exist
-                // if the the token[i] is "\'" heck if "\'" exist
-            }
-            // if getTokenType(tokens[i]) is "Operator"
-            if (lexical_analyzer.getTokenType(tokens[i]).equals("Operator")) {
-                // check if the previous token is not identifier or constant
-                if (!lexical_analyzer.getTokenType(tokens[i-1]).equals("Identifier") 
-                    || lexical_analyzer.getTokenType(tokens[i-1]).equals("Constant")) {
-                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected before this token");
-                    return false;
-                }
-                // check if the next token is not identifier or constant
-                if (!lexical_analyzer.getTokenType(tokens[i+1]).equals("Identifier") 
-                    || lexical_analyzer.getTokenType(tokens[i+1]).equals("Constant")) {
-                    System.out.println("Syntax error on token "+ tokens[i] +", Expression expected after this token");
-                    return false;
-                }
-            }
-        }
-        return true;
+    public static String[] split_by_or(int inx, String str) {
+        String[] temp = table_list[inx][1].split("\s\\|\s");
+        return temp;
     }
 }

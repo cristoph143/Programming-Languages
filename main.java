@@ -1,4 +1,15 @@
+import java.util.ArrayList;
 import java.util.Scanner;
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                     Project Created by Cristopher Bohol                    */
+/*                    Midterm Project: Programming Language                   */
+/*                            Deadline: May 5, 2022                           */
+/*                               Status: Ongoing                              */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
 
 public class main {
     public static void main(String[] args){
@@ -15,20 +26,12 @@ public class main {
             for (int i = 0; i < tokens.length; i++) {
                 System.out.println(tokens[i] + "\t" + lexical_analyzer.getTokenType(tokens[i]));
             }
-            // call final_tokens
-            String[] final_tokens = lexical_analyzer.final_tokens(tokens);
-            // print the final_tokens
-            System.out.println("\nFinal Token\tType");
-            for (int i = 0; i < final_tokens.length; i++) {
-                System.out.println(final_tokens[i] + "\t" + lexical_analyzer.getTokenType(final_tokens[i]));
-            }
-            // call syntax_analyzer and store the results to a variable
-            String[] syntax = syntax_analyzer.syntax_analyzer(final_tokens);
+            String[] syntax = syntax_analyzer.syntax_analyzer(tokens);
             // print the syntax
-            System.out.println("\nSyntax\tType");
-            for (int i = 0; i < syntax.length; i++) {
-                System.out.println(syntax[i] + "\t" + lexical_analyzer.getTokenType(syntax[i]));
-            }
+            // System.out.println("\nSyntax\tType");
+            // for (int i = 0; i < syntax.length; i++) {
+            //     System.out.println(syntax[i] + "\t" + lexical_analyzer.getTokenType(syntax[i]));
+            // }
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
