@@ -1,25 +1,26 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Map.Entry;
-
-import org.json.simple.JSONObject;
 
 public class syntax_analyzer {
     static List<String> GrammarString = new ArrayList<String>();
     static String[] header_list = { "var_dec", "data_type", "dec", "exp", "identifier" };
     static String[][] table_list;
 
-    static HashMap<String, String> map = new HashMap<String, String>();
 
     public static String[] syntax_analyzer(String[] tokens) {
         int idx = 0;
         String[] data_type = { "boolean", "float", "int", "String", "byte", "long", "short" };
         // add the tokens[1] to the node if it exist in data_type[i]
+        String tmp = "";
+        if (tokens.length == 1)      
+            isTerminator(tokens, idx);
         data_types(tokens, idx, data_type);
-        String tmp = identifier(tokens, idx);
+        tmp = forming_identifier(tokens, idx, tmp);
+        System.out.println(tmp+"sss");
+        // identifier(tokens, idx);
+        isTerminator(tokens, tokens.length-1);
+        tmp = identifier(tokens, idx);
         idx += tmp.length();
         // int op=(op+);
         System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
@@ -47,9 +48,18 @@ public class syntax_analyzer {
             sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
             System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
             dec(sub_tokens, 0, tmp);
-        } else if (lexical_analyzer.getTokenType(tokens[idx]) == "Terminator") {
+        } 
+    }
+
+    public static void isTerminator(String[] tokens, int idx) {
+        if (lexical_analyzer.getTokenType(tokens[idx]) == "Terminator") {
             System.out.println("Syntax Accepted");
+            System.exit(0);
         }
+        else{
+            System.out.println("Syntax error, insert \";\" to complete LocalVariableDeclarationStatement");
+        }
+        System.exit(0);
     }
 
     private static void exp(String[] tokens, int idx) {
@@ -62,13 +72,29 @@ public class syntax_analyzer {
             System.out.println("Syntax error on token \"" + tokens[idx + 1] + "\", invalid Expression");
             System.exit(1);
         }
+        if(tokens[idx + 1].equals("\"")){
+            // iterate until \" is found
+            quote(tokens, idx, "\"");
+
+        }
+    }
+
+    public static void quote(String[] tokens, int idx, String quote) {
+        String tmp;
+        String[] sub_tokens;
+        String quotes = "";
+        // append "\" + quote
+        quotes += "\\" + quote;
+        System.out.println("Syntax error on token \"" + quotes + "\", invalid Expression");
+        if(tokens[idx + 1].equals("\"")){
+            // iterate until \" is found
+            quote(tokens, idx, "\"");
+        }
     }
 
     private static void exp_par(String[] tokens, int idx) {
         String tmp;
         String[] sub_tokens;
-        // if next token is (
-
         // get the substring of tokens from 0 to idx
         sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
         System.out.println("sub_tokensassas: " + Arrays.toString(sub_tokens));
@@ -155,6 +181,13 @@ public class syntax_analyzer {
             System.exit(0);
         }
         tmp += tokens[idx + 1];
+        tmp = forming_identifier(tokens, idx, tmp);
+        System.out.println("idx: " + idx + " tokens:-- " + tokens[idx] + " tmp: " + tmp);
+        return tmp;
+    }
+
+    private static String forming_identifier(String[] tokens, int idx, String tmp) {
+        System.out.println(tmp+" --> idx --> "+ idx);
         for (int i = 2; i < tokens.length;) {
             if (lexical_analyzer.getTokenType(tokens[i]) == "Identifier"
                     || lexical_analyzer.getTokenType(tokens[i]) == "Constant") {
@@ -165,12 +198,12 @@ public class syntax_analyzer {
                 break;
             }
         }
-        System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
         return tmp;
     }
 
     private static void data_types(String[] tokens, int idx, String[] data_type) {
         for (int i = 0; i < data_type.length; i++) {
+            System.out.println("data_type: " + data_type[i]);
             if (tokens[idx].equals(data_type[i])) {
                 idx++;
                 break;
@@ -181,16 +214,5 @@ public class syntax_analyzer {
                 System.exit(0);
             }
         }
-    }
-
-    /* ---------- Return the parse tree structure for the given grammar --------- */
-    public static String[] ops_exp() {
-        String[] temp = table_list[3][1].split("\s");
-        return temp;
-    }
-
-    public static String[] split_by_or(int inx, String str) {
-        String[] temp = table_list[inx][1].split("\s\\|\s");
-        return temp;
     }
 }
