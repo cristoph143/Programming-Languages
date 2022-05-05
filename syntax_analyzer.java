@@ -70,16 +70,16 @@ public class syntax_analyzer {
     private static void exp(String[] tokens, int idx) {
         String tmp = "";
         String[] sub_tokens;
-        System.out.println("tokens: " + Arrays.toString(tokens));
+        System.out.println("exp: " + Arrays.toString(tokens) + tokens[idx]);
         if (tokens[idx].equals("(")) {
             exp_par(tokens, idx);
         }
         if (tokens[1].equals(")")) {
-            System.out.println("Syntax error on token \"" + tokens[idx + 1] + "\", invalid Expression");
+            System.out.println("Syntax error on token \""+ tokens[idx]+
+                    "\", expected Identifier or Constant or \"(\"");
             System.exit(1);
         }
-        if(lexical_analyzer.getTokenType(tokens[idx]) == "Identifier" 
-        || lexical_analyzer.getTokenType(tokens[idx]) == "Constant"){
+        if(lexical_analyzer.getTokenType(tokens[idx]) == "Identifier"){
             System.out.println("identifier: " + idx + " tokens: " + tokens[idx] + " tmp:ss " + tmp);
             tmp = identifier(tokens, idx);
             idx += tmp.length();
@@ -89,6 +89,7 @@ public class syntax_analyzer {
                 tmp = operator(tokens, 3);
                 sub_tokens = Arrays.copyOfRange(tokens, tmp.length(), tokens.length);
                 idx += tmp.length();
+                System.out.println("idx_OPs: " + tmp);
             }
             // int op=(op+);
             // get the substring of tokens from 0 to idx
@@ -97,15 +98,27 @@ public class syntax_analyzer {
                 isTerminator(tokens, tokens.length - 1);
             }
             System.out.println("sub_tokens: ss" + Arrays.toString(sub_tokens) + sub_tokens.length);
-            exp(sub_tokens, 0);
+            exp(sub_tokens, 1);
+        }
+        if(lexical_analyzer.getTokenType(tokens[idx]) == "Constant"){
+            System.out.println("constant: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+            tmp = constants(tokens, idx);
+            idx += tmp.length();
+            // int op=(op+);
+            // get the substring of tokens from 0 to idx
+            sub_tokens = Arrays.copyOfRange(tokens, tmp.length(), tokens.length);
+            if(sub_tokens.length <= 2){
+                isTerminator(tokens, tokens.length - 1);
+            }
+            System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
+            exp(sub_tokens, 1);
         }
     }
 
     private static String operator(String[] tokens, int idx) {
         // check if getTokenType(tokens[idx]) == "Identifier" or "Constant"
         String tmp = "";
-        if (lexical_analyzer.getTokenType(tokens[idx]) == "Identifier" || 
-        lexical_analyzer.getTokenType(tokens[idx]) == "Constant") {
+        if (lexical_analyzer.getTokenType(tokens[idx]) == "Identifier") {
             System.out.println("identifier_op: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
             tmp = identifier(tokens, idx);
             idx += tmp.length();
@@ -119,14 +132,57 @@ public class syntax_analyzer {
                 if (lexical_analyzer.getTokenType(sub_tokens[1]) == "Operator") {
                     sub_tokens = Arrays.copyOfRange(tokens, tmp.length()+2, tokens.length);
                     System.out.println("sub_tokens:" + Arrays.toString(sub_tokens) + sub_tokens.length+ tmp.length());
-                    System.out.println("sub_tokens: " + sub_tokens[1]);
+                    System.out.println("sub_tokens:hh " + sub_tokens[1]);
                     if(sub_tokens.length == 2){
                         System.out.println("Syntax error on token \""+ sub_tokens[0]+"\", expected Identifier or Constant");
                         System.exit(0);
                     }
-                    System.out.println("operator_op: " + idx + " tokens: " + sub_tokens + " tmp: " + tmp);
+                    System.out.println("operator_op: " + idx + " tokens: " + Arrays.toString(sub_tokens) + " tmp: " + tmp);
                     tmp = operator(sub_tokens, idx);
                     idx += tmp.length();
+                }
+                if(sub_tokens[1].equals("(")){
+                    System.out.println("ssdsd");
+                    exp_par(sub_tokens, idx);
+                }
+                if(sub_tokens[1].equals(")")){
+                    System.out.println("Syntax error on token \""+ sub_tokens[0]+
+                    "\", expected Identifier or Constant or \"(\"");
+                    System.exit(0);
+                }
+            }
+        }
+        if(lexical_analyzer.getTokenType(tokens[idx]) == "Constant"){
+            System.out.println("identifier_op: " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
+            tmp = constants(tokens, idx);
+            idx += tmp.length();
+            String[] sub_tokens = Arrays.copyOfRange(tokens, tmp.length()+1, tokens.length);
+            System.out.println("sub_tokens:" + Arrays.toString(sub_tokens) + sub_tokens.length+ tmp.length());
+            System.out.println("sub_tokens: " + sub_tokens[1]);
+            if(sub_tokens.length <= 2){
+                isTerminator(sub_tokens, sub_tokens.length - 1);
+            }
+            else{
+                if (lexical_analyzer.getTokenType(sub_tokens[1]) == "Operator") {
+                    sub_tokens = Arrays.copyOfRange(tokens, tmp.length()+2, tokens.length);
+                    System.out.println("sub_tokens:" + Arrays.toString(sub_tokens) + sub_tokens.length+ tmp.length());
+                    System.out.println("sub_tokens:hh " + sub_tokens[1]);
+                    if(sub_tokens.length == 2){
+                        System.out.println("Syntax error on token \""+ sub_tokens[0]+"\", expected Identifier or Constant");
+                        System.exit(0);
+                    }
+                    System.out.println("operator_op: " + idx + " tokens: " + Arrays.toString(sub_tokens) + " tmp: " + tmp);
+                    tmp = operator(sub_tokens, idx);
+                    idx += tmp.length();
+                }
+                if(sub_tokens[1].equals("(")){
+                    System.out.println("ssdsd");
+                    exp_par(sub_tokens, idx);
+                }
+                if(sub_tokens[1].equals(")")){
+                    System.out.println("Syntax error on token \""+ sub_tokens[0]+
+                    "\", expected Identifier or Constant or \"(\"");
+                    System.exit(0);
                 }
             }
         }
@@ -136,20 +192,21 @@ public class syntax_analyzer {
     private static void exp_par(String[] tokens, int idx) {
         String tmp;
         String[] sub_tokens;
-        // get the substring of tokens from 0 to idx
-        sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
-        System.out.println("sub_tokensassas: " + Arrays.toString(sub_tokens));
+        System.out.println("sub_tokensassas: " +  Arrays.toString(tokens));
         // append sub_tokens to tmp_str
         String tmp_str = "";
-        // iterate over sub_tokens and append to tmp_str
-        for (int i = 0; i < sub_tokens.length; i++) {
-            tmp_str += sub_tokens[i];
+        // iterate over tokens and append to tmp_str
+        for (int i = 0; i < tokens.length; i++) {
+            tmp_str += tokens[i];
         }
         System.out.println("tmp_str: " + tmp_str);
         tmp = tokens[idx];
         isBalancedPar(tmp_str);
         // get the substring of tokens from 0 to idx
         sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+        if(sub_tokens.length < 2){
+            isTerminator(sub_tokens, sub_tokens.length - 1);
+        }
         System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
         System.out.println("idx:s " + idx + " tokens: " + tokens[idx] + " tmp: " + tmp);
     }
@@ -173,6 +230,10 @@ public class syntax_analyzer {
                     arr[i] = 3;
                 }
             }
+        }
+        if(str.charAt(0) == ')'){
+            System.out.println("Syntax error on token \""+ str.charAt(0)+"\", expected \"(\"");
+            System.exit(0);
         }
         // print arr
         for (int i = 0; i < arr.length; i++) {
@@ -218,6 +279,9 @@ public class syntax_analyzer {
         String tmp = "";
         // check if getTokenType(tokens[1]) is "Identifier"
         if (lexical_analyzer.getTokenType(tokens[1]) != "Identifier") {
+            if(lexical_analyzer.getTokenType(tokens[1]) == "Constant"){
+                return tmp;
+            }
             System.out.println("Error: " + tokens[idx + 1] + " is not an identifier");
             System.exit(0);
         }
@@ -233,6 +297,32 @@ public class syntax_analyzer {
         if (lexical_analyzer.getTokenType(tokens[idx]) == "Identifier") {
             while (lexical_analyzer.getTokenType(tokens[idx]) == "Identifier" ||
                     lexical_analyzer.getTokenType(tokens[idx]) == "Constant") {
+                tmp2 += tokens[idx];
+                idx++;
+            }
+            System.out.println("tm: " + tmp2);
+        }
+        return tmp2;
+    }
+
+    private static String constants(String[] tokens, int idx) {
+        String tmp = "";
+        // check if tokens[idx] is not [0-9]
+        if (lexical_analyzer.getTokenType(tokens[idx]) != "Constant") {
+            System.out.println("Error: " + tokens[idx] + " is not a constant");
+            System.exit(0);
+        }
+        tmp += tokens[idx + 1];
+        tmp = forming_constants(tokens, idx, tmp);
+        System.out.println("form_constants: " + idx + " tokens:-- " + tokens[idx] + " tmp: " + tmp);
+        return tmp;
+    }
+
+    private static String forming_constants(String[] tokens, int idx, String tmp) {
+        String tmp2 = tmp;
+        System.out.println("form_constants2: " + idx + " tokens:?--> " + tokens.length + " tmp: " + tmp2);
+        if (lexical_analyzer.getTokenType(tokens[idx]) == "Identifier") {
+            while (lexical_analyzer.getTokenType(tokens[idx]) == "Constant") {
                 tmp2 += tokens[idx];
                 idx++;
             }
@@ -272,9 +362,9 @@ public class syntax_analyzer {
         sub_tokens = Arrays.copyOfRange(tokens, len, tokens.length);
         System.out.println("sub_tokens: " + Arrays.toString(sub_tokens));
         // if length of sub_tokens is less than 2 then is_data_type = false
-        if (sub_tokens.length < 3) {
+        if (sub_tokens.length <= 3) {
             System.out.println("Error: " + sub_tokens[0] + " expected \"Identifier\"");
-            is_data_type = false;
+            System.exit(1);
         }
         return is_data_type;
     }
