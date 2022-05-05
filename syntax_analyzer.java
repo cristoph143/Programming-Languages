@@ -11,20 +11,23 @@ public class syntax_analyzer {
         int idx = 0;
         // add the tokens[1] to the node if it exist in data_type[i]
         String tmp = "";
-        if (!data_types(tokens, idx)) {
-            System.out.println("\nSyntax\tType");
-            isTerminator(tokens, tokens.length - 1);
+        if (data_types(tokens, idx)) {
+            tmp = identifier(tokens, idx);
+            System.out.println("-----------------------------------------------------");
+            idx += tmp.length();
+            // int op=(op+);
+            System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " +
+            tmp);
+            // get the substring of tokens from 0 to idx
+            String[] sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
+            if(sub_tokens.length < 2){
+                isTerminator(tokens, tokens.length - 1);
+            }
+            dec(sub_tokens, 0, tmp);
         }
-        tmp = identifier(tokens, idx);
-        System.out.println("-----------------------------------------------------");
-        idx += tmp.length();
-        // int op=(op+);
-        System.out.println("idx: " + idx + " tokens: " + tokens[idx] + " tmp: " +
-        tmp);
-        // get the substring of tokens from 0 to idx
         String[] sub_tokens = Arrays.copyOfRange(tokens, idx + 1, tokens.length);
-        if(sub_tokens.length < 2){
-            isTerminator(tokens, tokens.length - 1);
+            if(sub_tokens.length < 2){
+                isTerminator(tokens, tokens.length - 1);
         }
         dec(sub_tokens, 0, tmp);
         return tokens;
